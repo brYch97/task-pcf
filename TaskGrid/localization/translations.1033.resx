@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<xsd:schema id="root"
+		xmlns=""
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
+			Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
+			Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="name" xml:space="preserve">
+		<value>Name</value>
+		<comment></comment>
+	</data>
+	<data name="no" xml:space="preserve">
+		<value>No</value>
+		<comment></comment>
+	</data>
+	<data name="yes" xml:space="preserve">
+		<value>Yes</value>
+		<comment></comment>
+	</data>
+	<data name="ok" xml:space="preserve">
+		<value>Ok</value>
+		<comment></comment>
+	</data>
+	<data name="confirm" xml:space="preserve">
+		<value>Confirm</value>
+		<comment></comment>
+	</data>
+	<data name="confirmation" xml:space="preserve">
+		<value>Confirmation</value>
+		<comment></comment>
+	</data>
+	<data name="myViews" xml:space="preserve">
+		<value>My views</value>
+		<comment></comment>
+	</data>
+	<data name="systemViews" xml:space="preserve">
+		<value>System views</value>
+		<comment></comment>
+	</data>
+	<data name="saveAsNew" xml:space="preserve">
+		<value>Save as new view</value>
+		<comment></comment>
+	</data>
+	<data name="saveExisting" xml:space="preserve">
+		<value>Save changes to current view</value>
+		<comment></comment>
+	</data>
+	<data name="manageViews" xml:space="preserve">
+		<value>Manage views</value>
+		<comment></comment>
+	</data>
+	<data name="deleteView" xml:space="preserve">
+		<value>Are you sure you want to delete this view? You can't undo this action.</value>
+		<comment></comment>
+	</data>
+	<data name="cancel" xml:space="preserve">
+		<value>Cancel</value>
+		<comment></comment>
+	</data>
+	<data name="save" xml:space="preserve">
+		<value>Save</value>
+		<comment></comment>
+	</data>
+	<data name="loading" xml:space="preserve">
+		<value>Loading...</value>
+		<comment></comment>
+	</data>
+	<data name="reordering" xml:space="preserve">
+		<value>Reordering</value>
+		<comment></comment>
+	</data>
+	<data name="search" xml:space="preserve">
+		<value>Search</value>
+		<comment></comment>
+	</data>
+	<data name="editColumns" xml:space="preserve">
+		<value>Edit columns</value>
+		<comment></comment>
+	</data>
+	<data name="allTasks" xml:space="preserve">
+		<value>All Tasks</value>
+		<comment></comment>
+	</data>
+	<data name="new" xml:space="preserve">
+		<value>New</value>
+		<comment></comment>
+	</data>
+	<data name="bulkEdit" xml:space="preserve">
+		<value>Edit</value>
+		<comment></comment>
+	</data>
+	<data name="settings" xml:space="preserve">
+		<value>Settings</value>
+		<comment></comment>
+	</data>
+	<data name="reorderingTaskDialog.text.children" xml:space="preserve">
+		<value>Do you want to make "{{ baseRecord }}" children of "{{ overBaseRecord }}"?</value>
+		<comment></comment>
+	</data>
+	<data name="reorderingTaskDialog.text.above" xml:space="preserve">
+		<value>Do you want to move "{{ baseRecord }}" above "{{ overBaseRecord }}"?</value>
+		<comment></comment>
+	</data>
+	<data name="reorderingTaskDialog.text.below" xml:space="preserve">
+		<value>Do you want to move "{{ baseRecord }}" below "{{ overBaseRecord }}"?</value>
+		<comment></comment>
+	</data>
+	<data name="reorderingTaskTemplateDialog.text.children" xml:space="preserve">
+		<value>Do you want to make "{{ baseRecord }}" children of "{{ overBaseRecord }}"?</value>
+		<comment></comment>
+	</data>
+	<data name="reorderingTaskTemplateDialog.text.topLevel" xml:space="preserve">
+		<value>Do you want to make "{{ baseRecord }}" top-level template?</value>
+		<comment></comment>
+	</data>
+	<data name="creatingTemplateFromTasks" xml:space="preserve">
+		<value>Creating template from task...</value>
+		<comment></comment>
+	</data>
+	<data name="creatingTasksFromTemplate" xml:space="preserve">
+		<value>Creating tasks from template...</value>
+		<comment></comment>
+	</data>
+	<data name="templateCreatedSuccessfully" xml:space="preserve">
+		<value>Template was created successfully.</value>
+		<comment></comment>
+	</data>
+	<data name="name" xml:space="preserve">
+		<value>Name</value>
+		<comment></comment>
+	</data>
+	<data name="description" xml:space="preserve">
+		<value>Description</value>
+		<comment></comment>
+	</data>
+	<data name="noTaskTemplates" xml:space="preserve">
+		<value>No task templates</value>
+		<comment></comment>
+	</data>
+	<data name="addChild" xml:space="preserve">
+		<value>Add Child</value>
+		<comment></comment>
+	</data>
+	<data name="addCustomColumn" xml:space="preserve">
+		<value>Create Custom Column</value>
+		<comment></comment>
+	</data>
+	<data name="confirmColumnDelete" xml:space="preserve">
+		<value>Do you want to delete the selected column?</value>
+		<comment></comment>
+	</data>
+	<data name="confirmColumnEdit" xml:space="preserve">
+		<value>To edit the column, all data needs to be reloaded. Do you want to continue?</value>
+		<comment></comment>
+	</data>
+	<data name="loadingTemplates" xml:space="preserve">
+		<value>Loading templates...</value>
+		<comment></comment>
+	</data>
+	<data name="taskFromTemplate" xml:space="preserve">
+		<value>Task From Template</value>
+		<comment></comment>
+	</data>
+	<data name="templateFromTask" xml:space="preserve">
+		<value>Template From Task</value>
+		<comment></comment>
+	</data>
+	<data name="loadingMilestones" xml:space="preserve">
+		<value>Loading milestones...</value>
+		<comment></comment>
+	</data>
+	<data name="chooseExisting" xml:space="preserve">
+		<value>Choose existing</value>
+		<comment></comment>
+	</data>
+	<data name="noMilestones" xml:space="preserve">
+		<value>No milestones</value>
+		<comment></comment>
+	</data>
+	<data name="loadingContracts" xml:space="preserve">
+		<value>Loading contracts...</value>
+		<comment></comment>
+	</data>
+	<data name="createFromContract" xml:space="preserve">
+		<value>Create from contract</value>
+		<comment></comment>
+	</data>
+	<data name="noContracts" xml:space="preserve">
+		<value>No contracts</value>
+		<comment></comment>
+	</data>
+	<data name="createManually" xml:space="preserve">
+		<value>Create manually</value>
+		<comment></comment>
+	</data>
+	<data name="newRecord" xml:space="preserve">
+		<value>New Record</value>
+		<comment></comment>
+	</data>
+	<data name="filterByKeyword" xml:space="preserve">
+		<value>Filter by keyword</value>
+		<comment></comment>
+	</data>
+	<data name="deleteSelected" xml:space="preserve">
+		<value>Delete</value>
+		<comment></comment>
+	</data>
+	<data name="showHierarchy" xml:space="preserve">
+		<value>Show hierarchy</value>
+		<comment></comment>
+	</data>
+	<data name="deleteSelected" xml:space="preserve">
+		<value>Delete</value>
+		<comment></comment>
+	</data>
+	<data name="confirmDialog.deleteSelectedRows.text" xml:space="preserve">
+		<value>Are you sure you want to delete selected rows?</value>
+		<comment></comment>
+	</data>
+	<data name="topLevel" xml:space="preserve">
+		<value>Top-level</value>
+		<comment></comment>
+	</data>
+	<data name="canNotDeleteCompleted" xml:space="preserve">
+		<value>You can't delete completed one.</value>
+		<comment></comment>
+	</data>
+	<data name="canNotDeletedRecordsWithChild" xml:space="preserve">
+		<value>You can't delete records with children.</value>
+		<comment></comment>
+	</data>
+	<data name="canNotEditCompletedTask" xml:space="preserve">
+		<value>You can't edit completed task.</value>
+		<comment></comment>
+	</data>
+	<data name="selectMaximumOneTask" xml:space="preserve">
+		<value>Select maximum one task.</value>
+		<comment></comment>
+	</data>
+	<data name="hideInactiveTasks" xml:space="preserve">
+		<value>Hide inactive tasks</value>
+		<comment></comment>
+	</data>
+	<data name="successfulOperationDialogTitle" xml:space="preserve">
+		<value>Success</value>
+		<comment></comment>
+	</data>
+	<data name="warningDialogTitle" xml:space="preserve">
+		<value>Warning</value>
+		<comment></comment>
+	</data>
+	<data name="informationDialogTitle" xml:space="preserve">
+		<value>Information</value>
+		<comment></comment>
+	</data>
+	<data name="reorderingTaskDialog.manyChildrenWarning" xml:space="preserve">
+		<value>You are about to move {{numberOfRecords}} records. Do you wish to continue?</value>
+		<comment></comment>
+	</data>
+	<!-- Errors -->
+	<data name="couldNotFindRecord" xml:space="preserve">
+		<value>Could not find base record from the fetch xml!</value>
+		<comment></comment>
+	</data>
+	<data name="wrongBaseRecord" xml:space="preserve">
+		<value>Base record has to be task or task template entity!</value>
+		<comment></comment>
+	</data>
+	<data name="fillRecordId" xml:space="preserve">
+		<value>Fill record id to retrieve base records!</value>
+		<comment></comment>
+	</data>
+	<data name="fillEntityName" xml:space="preserve">
+		<value>Fill entity name to retrieve base records!</value>
+		<comment></comment>
+	</data>
+	<data name="fillFetchXml" xml:space="preserve">
+		<value>Fill fetch xml to retrieve base records!</value>
+		<comment></comment>
+	</data>
+	<data name="myTemplates" xml:space="preserve">
+		<value>My Templates</value>
+		<comment></comment>
+	</data>
+	<data name="publicTemplates" xml:space="preserve">
+		<value>Public Templates</value>
+		<comment></comment>
+	</data>
+	<data name="updatingTasks" xml:space="preserve">
+    	<value>Updating task...</value>
+	</data>
+	<data name="deletingTasks" xml:space="preserve">
+    	<value>Deleting task...</value>
+	</data>
+	<data name="deletingTasksError" xml:space="preserve">
+    	<value>Some tasks could not be deleted due to following reasons:</value>
+    	<comment></comment>
+	</data>
+	<data name="noRecordsFound" xml:space="preserve">
+		<value>No records found.</value>
+		<comment></comment>
+	</data>
+	<data name="unexpectedErrorOccurred" xml:space="preserve">
+		<value>Unexpected error occurred.</value>
+		<comment></comment>
+	</data>
+</root>

@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<xsd:schema id="root"
+		xmlns=""
+		xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+		xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0,
+			Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0,
+			Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="name" xml:space="preserve">
+		<value>Název</value>
+		<comment></comment>
+	</data>
+	<data name="no" xml:space="preserve">
+		<value>Ne</value>
+		<comment></comment>
+	</data>
+	<data name="yes" xml:space="preserve">
+		<value>Ano</value>
+		<comment></comment>
+	</data>
+	<data name="ok" xml:space="preserve">
+		<value>Ok</value>
+		<comment></comment>
+	</data>
+	<data name="confirm" xml:space="preserve">
+		<value>Potvrdit</value>
+		<comment></comment>
+	</data>
+	<data name="confirmation" xml:space="preserve">
+		<value>Potvrzení</value>
+		<comment></comment>
+	</data>
+	<data name="save" xml:space="preserve">
+		<value>Uložit</value>
+		<comment></comment>
+	</data>
+	<data name="myViews" xml:space="preserve">
+		<value>Má zobrazení</value>
+		<comment></comment>
+	</data>
+		<data name="name" xml:space="preserve">
+		<value>Název</value>
+		<comment></comment>
+	</data>
+	<data name="description" xml:space="preserve">
+		<value>Popis</value>
+		<comment></comment>
+	</data>
+	<data name="systemViews" xml:space="preserve">
+		<value>Systémová zobrazení</value>
+		<comment></comment>
+	</data>
+	<data name="saveAsNew" xml:space="preserve">
+		<value>Uložit jako nové zobrazení</value>
+		<comment></comment>
+	</data>
+	<data name="saveExisting" xml:space="preserve">
+		<value>Uložit změny do aktuálního zobrazení</value>
+		<comment></comment>
+	</data>
+	<data name="allTasks" xml:space="preserve">
+		<value>Všechny úkoly</value>
+		<comment></comment>
+	</data>
+	<data name="manageViews" xml:space="preserve">
+		<value>Spravovat zobrazení</value>
+		<comment></comment>
+	</data>
+	<data name="deleteView" xml:space="preserve">
+		<value>Opravdu chcete odstranit toto zobrazení? Tuto akci nelze vrátit zpět.</value>
+		<comment></comment>
+	</data>
+	<data name="cancel" xml:space="preserve">
+		<value>Zrušit</value>
+		<comment></comment>
+	</data>
+	<data name="loading" xml:space="preserve">
+		<value>Načítání...</value>
+		<comment></comment>
+	</data>
+	<data name="reordering" xml:space="preserve">
+		<value>Přeskupení</value>
+		<comment></comment>
+	</data>
+	<data name="search" xml:space="preserve">
+		<value>Hledat</value>
+		<comment></comment>
+	</data>
+	<data name="editColumns" xml:space="preserve">
+		<value>Upravit sloupce</value>
+		<comment></comment>
+	</data>
+	<data name="new" xml:space="preserve">
+		<value>Nový</value>
+		<comment></comment>
+	</data>
+	<data name="bulkEdit" xml:space="preserve">
+		<value>Upravit</value>
+		<comment></comment>
+	</data>
+	<data name="settings" xml:space="preserve">
+		<value>Nastavení</value>
+		<comment></comment>
+	</data>
+	<data name="reorderingTaskDialog.text.children" xml:space="preserve">
+		<value>Přejete si udělat úkol "{{ baseRecord }}" podúkolem "{{ overBaseRecord }}"?</value>
+		<comment></comment>
+	</data>
+	<data name="reorderingTaskDialog.text.above" xml:space="preserve">
+		<value>Přejete si přesunout "{{ baseRecord }}" nad "{{ overBaseRecord }}"?</value>
+		<comment></comment>
+	</data>
+	<data name="reorderingTaskDialog.text.below" xml:space="preserve">
+		<value>Přejete si přesunout "{{ baseRecord }}" pod "{{ overBaseRecord }}"?</value>
+		<comment></comment>
+	</data>
+		<data name="showHierarchy" xml:space="preserve">
+		<value>Zobrazit hierarchii</value>
+		<comment></comment>
+	</data>
+	<data name="reorderingTaskTemplateDialog.text.children" xml:space="preserve">
+		<value>Přejete si udělat šablonu "{{ baseRecord }}" podšablonou "{{ overBaseRecord }}"?</value>
+		<comment></comment>
+	</data>
+	<data name="reorderingTaskTemplateDialog.text.topLevel" xml:space="preserve">
+		<value>Přejete si udělat "{{ baseRecord }}" šablonou nejvyšší úrovně?</value>
+		<comment></comment>
+	</data>
+	<data name="creatingTemplateFromTasks" xml:space="preserve">
+		<value>Vytváření šablony...</value>
+		<comment></comment>
+	</data>
+	<data name="creatingTasksFromTemplate" xml:space="preserve">
+		<value>Vytváření úkolů...</value>
+		<comment></comment>
+	</data>
+	<data name="templateCreatedSuccessfully" xml:space="preserve">
+		<value>Šablona byla úspěšně vytvořena.</value>
+		<comment></comment>
+	</data>
+	<data name="noTaskTemplates" xml:space="preserve">
+		<value>Žádné šablony</value>
+		<comment></comment>
+	</data>
+	<data name="addChild" xml:space="preserve">
+		<value>Přidat podúkol</value>
+		<comment></comment>
+	</data>
+	<data name="addCustomColumn" xml:space="preserve">
+		<value>Vytvořit vlastní sloupec</value>
+		<comment></comment>
+	</data>
+	<data name="loadingTemplates" xml:space="preserve">
+		<value>Načítání šablon...</value>
+		<comment></comment>
+	</data>
+	<data name="taskFromTemplate" xml:space="preserve">
+		<value>Úkol ze šablony</value>
+		<comment></comment>
+	</data>
+	<data name="templateFromTask" xml:space="preserve">
+		<value>Šablona z úkolu</value>
+		<comment></comment>
+	</data>
+	<data name="loadingMilestones" xml:space="preserve">
+		<value>Načítání milníků...</value>
+		<comment></comment>
+	</data>
+	<data name="chooseExisting" xml:space="preserve">
+		<value>Vybrat existující...</value>
+		<comment></comment>
+	</data>
+	<data name="noMilestones" xml:space="preserve">
+		<value>Žádné milníky</value>
+		<comment></comment>
+	</data>
+	<data name="loadingContracts" xml:space="preserve">
+		<value>Načítání smluv...</value>
+		<comment></comment>
+	</data>
+	<data name="createFromContract" xml:space="preserve">
+		<value>Vytvořit ze smlouvy</value>
+		<comment></comment>
+	</data>
+	<data name="noContracts" xml:space="preserve">
+		<value>Žádné smlouvy</value>
+		<comment></comment>
+	</data>
+	<data name="createManually" xml:space="preserve">
+		<value>Vytvořit ručně</value>
+		<comment></comment>
+	</data>
+	<data name="newRecord" xml:space="preserve">
+		<value>Nový záznam</value>
+		<comment></comment>
+	</data>
+	<data name="filterByKeyword" xml:space="preserve">
+		<value>Filtrovat podle klíčového slova</value>
+		<comment></comment>
+	</data>
+	<data name="deleteSelected" xml:space="preserve">
+		<value>Smazat</value>
+		<comment></comment>
+	</data>
+	<data name="confirmDialog.deleteSelectedRows.text" xml:space="preserve">
+		<value>Přejete si smazat vybrané řádky?</value>
+		<comment></comment>
+	</data>
+	<data name="confirmColumnDelete" xml:space="preserve">
+		<value>Přejete si smazat vybraný sloupec?</value>
+		<comment></comment>
+	</data>
+	<data name="confirmColumnEdit" xml:space="preserve">
+		<value>Pro úpravu sloupce je nutné přenačíst veškerá data. Přejete si pokračovat?</value>
+		<comment></comment>
+	</data>
+	<data name="reorderingTaskDialog.manyChildrenWarning" xml:space="preserve">
+		<value>Chystáte se přesunout {{numberOfRecords}} záznamů. Přejete si pokračovat?</value>
+		<comment></comment>
+	</data>
+	<data name="topLevel" xml:space="preserve">
+		<value>Úkol nejvyšší úrovně</value>
+		<comment></comment>
+	</data>
+	<data name="canNotDeleteCompleted" xml:space="preserve">
+		<value>Dokončený záznam nelze smazat.</value>
+		<comment></comment>
+	</data>
+	<data name="canNotDeletedRecordsWithChild" xml:space="preserve">
+		<value>Nelze smazat záznam s existujícími podzáznamy.</value>
+		<comment></comment>
+	</data>
+	<data name="canNotEditCompletedTask" xml:space="preserve">
+		<value>Nelze upravovat dokončený záznam.</value>
+		<comment></comment>
+	</data>
+	<data name="selectMaximumOneTask" xml:space="preserve">
+		<value>Vyberte maximálně jeden.</value>
+		<comment></comment>
+	</data>
+		<data name="hideInactiveTasks" xml:space="preserve">
+		<value>Schovat neaktivní úkoly</value>
+		<comment></comment>
+	</data>
+	<data name="myTemplates" xml:space="preserve">
+		<value>Moje šablony</value>
+		<comment></comment>
+	</data>
+	<data name="publicTemplates" xml:space="preserve">
+		<value>Veřejné šablony</value>
+		<comment></comment>
+	</data>
+	<data name="successfulOperationDialogTitle" xml:space="preserve">
+		<value>Úspěch</value>
+		<comment></comment>
+	</data>
+	<data name="warningDialogTitle" xml:space="preserve">
+		<value>Varování</value>
+		<comment></comment>
+	</data>
+	<data name="informationDialogTitle" xml:space="preserve">
+		<value>Informace</value>
+		<comment></comment>
+	</data>
+	<!-- Errors -->
+	<data name="couldNotFindRecord" xml:space="preserve">
+		<value>Nepodařilo se nalézt záznam z použitého fetch xml!</value>
+		<comment></comment>
+	</data>
+	<data name="wrongBaseRecord" xml:space="preserve">
+		<value>Záznam musí být typu úkol nebo šablona úkolu!</value>
+		<comment></comment>
+	</data>
+	<data name="fillRecordId" xml:space="preserve">
+		<value>Vyplňte id záznamu pro získání základních záznamů!</value>
+		<comment></comment>
+	</data>
+	<data name="fillEntityName" xml:space="preserve">
+		<value>Vyplňte název entity pro získání základních záznamů!</value>
+		<comment></comment>
+	</data>
+	<data name="fillFetchXml" xml:space="preserve">
+		<value>Vyplńte fetch xml pro získání základních záznamů!</value>
+		<comment></comment>
+	</data>
+	<data name="updatingTasks" xml:space="preserve">
+		<value>Probíhá aktualizace {{ currentCount }}. úkolu ze "{{ totalCount }}"</value>
+		<comment></comment>
+	</data>
+	<data name="deletingTasks" xml:space="preserve">
+    	<value>Probíhá odstranění úkolů...</value>
+    	<comment></comment>
+	</data>
+	<data name="deletingTasksError" xml:space="preserve">
+    	<value>Některé úkoly nemohly být vymazány z následujících důvodů:</value>
+    	<comment></comment>
+	</data>
+	<data name="noRecordsFound" xml:space="preserve">
+		<value>Nenašli jsme nic, co by se zde dalo zobrazit.</value>
+		<comment></comment>
+	</data>
+	<data name="unexpectedErrorOccurred" xml:space="preserve">
+		<value>Nastala neočekávaná chyba.</value>
+		<comment></comment>
+	</data>
+</root>

@@ -17,27 +17,10 @@ export class TaskGrid implements ComponentFramework.StandardControl<IInputs, IOu
     private _descriptor: ITaskGridDescriptor;
     private _context: ComponentFramework.Context<IInputs, IOutputs>;
 
-    public init(
-        context: ComponentFramework.Context<IInputs, IOutputs>,
-        _notifyOutputChanged: () => void,
-        _state: ComponentFramework.Dictionary,
-        container: HTMLDivElement,
-    ): void {
+    public init(context: ComponentFramework.Context<IInputs, IOutputs>, _notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container: HTMLDivElement): void {
         initializeIcons();
-        container.classList.add(mergeStyles({textAlign: 'left'}))
-        //needs to be mocked for local host
-        window.Xrm = {
-            Utility: {
-                getGlobalContext: () => ({
-                    userSettings: {
-                        languageId: 1033,
-                        //@ts-ignore
-                        formatInfoCultureName: 'en-US'
-                    }
-                }),
-                executeFunction: () => { }
-            }
-        };
+        container.classList.add(mergeStyles({ textAlign: 'left' }));
+        this._mockXrmForLocalDevelopment();
         this._container = container;
         this._context = context;
         this._descriptor = new MemoryDescriptor();
@@ -60,5 +43,21 @@ export class TaskGrid implements ComponentFramework.StandardControl<IInputs, IOu
 
     public destroy(): void {
         ReactDOM.unmountComponentAtNode(this._container);
+    }
+
+    private _mockXrmForLocalDevelopment() {
+        //needs to be mocked for local host
+        window.Xrm = {
+            Utility: {
+                getGlobalContext: () => ({
+                    userSettings: {
+                        languageId: 1033,
+                        //@ts-ignore
+                        formatInfoCultureName: 'en-US'
+                    }
+                }),
+                executeFunction: () => { }
+            }
+        };
     }
 }

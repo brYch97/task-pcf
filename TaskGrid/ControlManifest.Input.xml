@@ -2,22 +2,7 @@
 <manifest>
   <control namespace="TALXIS.PCF" constructor="TaskGrid" version="0.0.1" display-name-key="Task Grid" description-key="Wrapper over Virtual Dataset that allows task management." control-type="standard">
 
-    <data-set name="sampleDataSet" display-name-key="Dataset_Display_Key">
-    </data-set>
-
-    <property name="fetchXml" display-name-key="Fetch Xml" description-key="Provide Fetch Xml for tasks retrieval." default-value="" of-type="Multiple" usage="input" required="true" />
-    <property name="entityName" display-name-key="Entity Name" description-key="Provide entity logical name." default-value="" of-type="SingleLine.Text" usage="input" required="false" />
-    <property name="recordId" display-name-key="Record Id" description-key="Provide record id." default-value="" of-type="SingleLine.Text" usage="input" required="false" />
-
-    <property name="selfReferenceParentScope" display-name-key="Self Reference Parent Scope" description-key="Do you filter by the same entity as shown in backlog? Only top-level tasks are enabled." of-type="Enum" usage="input" required="false">
-      <value name="True" display-name-key="True" description-key="">true</value>
-      <value name="False" display-name-key="False" description-key="">false</value>
-    </property>
-    <property name="baseConfig" display-name-key="Base Config" description-key="Provide base configuration for TaskGrid control. (Temporary property)" default-value="" of-type="Multiple" usage="input" required="false" />
-
-    <property name="Height" display-name-key="Height"
-    description-key="Can be used to force the control to always stay at fixed height. Set to 100% if you want to leverage the Expand to full tab feature."
-    of-type="SingleLine.Text" usage="input" required="false" />
+    <property name="bindingField" display-name-key="Fetch Xml" description-key="" default-value="" of-type="SingleLine.Text" usage="input" required="true" />
 
     <resources>
       <code path="index.ts" order="1"/>

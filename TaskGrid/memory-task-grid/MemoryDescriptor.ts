@@ -50,7 +50,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
             isFlatListEnabled: false,
             columns: COLUMNS.filter(c =>
                 c.isHidden ||
-                ['subject', 'statuscode', 'priority', 'scheduledend', 'assignedto'].includes(c.name)
+                ['subject', 'statuscode', 'priority', 'scheduledend', 'assignedto', 'scheduledstart', 'scheduledend'].includes(c.name)
             ),
             filtering: {
                 filterOperator: 1, // And
@@ -94,6 +94,8 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
             path: PATH_COL,
             stateCode: STATE_CODE_COL,
             percentComplete: PERCENT_COMPLETE_COL,
+            startDate: 'scheduledstart',
+            endDate: 'scheduledend',
         };
     }
 

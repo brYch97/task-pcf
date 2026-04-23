@@ -15,7 +15,7 @@
   "dependencies": {
     "@ag-grid-community/core": "31.3.2",
     "@fluentui/react": "8.121.5",
-    "@talxis/base-controls": "1.2604.2",
+    "@talxis/base-controls": "/Users/dominikbrych/Repos/NETWORG/base-controls",
     "@talxis/client-libraries": "1.2604.1",
     "@talxis/react-components": "^1.2505.1",
     "liquidjs": "9.43.0",

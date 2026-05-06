@@ -188,7 +188,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
 
     public onGetGridParameters(): ITaskGridParameters {
         return {
-            height: '600px',
+            height: '100%',
             enableRowDragging: true,
             enableEditColumns: true,
             enableShowHierarchyToggle: true,

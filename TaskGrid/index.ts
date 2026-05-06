@@ -19,6 +19,7 @@ export class TaskGrid implements ComponentFramework.StandardControl<IInputs, IOu
 
     public init(context: ComponentFramework.Context<IInputs, IOutputs>, _notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container: HTMLDivElement): void {
         initializeIcons();
+        container.classList.add(mergeStyles({ height: '600px'}));
         container.classList.add(mergeStyles({ textAlign: 'left' }));
         this._mockXrmForLocalDevelopment();
         this._container = container;

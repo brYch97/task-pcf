@@ -97,7 +97,7 @@ export const COLUMNS: IColumn[] = [
         name: PERCENT_COMPLETE_COL,
         dataType: 'Whole.None',
         displayName: '% Complete',
-        visualSizeFactor: 115,
+        visualSizeFactor: 160,
         controls: [{
             appliesTo: 'both',
             name: 'PercentComplete',

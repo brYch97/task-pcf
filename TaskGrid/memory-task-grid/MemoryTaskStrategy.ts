@@ -91,10 +91,6 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
         return [];
     }
 
-    public onGetQuickFindColumns(): string[] {
-        return [SUBJECT_COL, 'assignedto', 'tags'];
-    }
-
     public async onCreateTask(parentTaskId?: string): Promise<IRawRecord | null> {
         const id = this._generateId();
         ++_newTaskCount;
@@ -111,7 +107,6 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
         );
         const newTask: IRawRecord = {
             [PRIMARY_ID]: id,
-            [SUBJECT_COL]: `New Task ${_newTaskCount}`,
             [PARENT_ID_VALUE_KEY]: parentTaskId ?? null,
             [STACK_RANK_COL]: minRankEntry === null ? SEED_RANKS[0] : LexoRank.parse(minRankEntry).genPrev().format(),
             [STATE_CODE_COL]: 0,

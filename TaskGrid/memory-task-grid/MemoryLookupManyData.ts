@@ -158,7 +158,7 @@ export function personRef(name: string): ComponentFramework.EntityReference {
     return {
         id:         { guid: p[PEOPLE_PRIMARY_ID] as string },
         name:       p.name as string,
-        entityType: PEOPLE_ENTITY_NAME,
+        etn: PEOPLE_ENTITY_NAME,
         rawData:    { imageurl: p.imageurl },
     } as unknown as ComponentFramework.EntityReference;
 }
@@ -170,7 +170,7 @@ export function tagRef(slug: string): ComponentFramework.EntityReference {
     return {
         id:         { guid: t[TAGS_PRIMARY_ID] as string },
         name:       t.name as string,
-        entityType: TAGS_ENTITY_NAME,
+        etn: TAGS_ENTITY_NAME,
         rawData:    { color: t.color },
-    } as unknown as ComponentFramework.EntityReference;
+    } as any
 }

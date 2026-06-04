@@ -62,6 +62,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
                     },
                 ],
             },
+            quickFindColumns: [SUBJECT_COL]
         },
         {
             id: 'uq-default-02-0000-0000-000000000000',
@@ -81,6 +82,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
                     },
                 ],
             },
+            quickFindColumns: [SUBJECT_COL]
         },
     ];
 
@@ -110,6 +112,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
                         c.isHidden ||
                         ['subject', 'statuscode', 'priority', 'scheduledend', 'estimatedeffort', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
                     ),
+                    quickFindColumns: [SUBJECT_COL]
                 },
             ],
             onGetUserQueries: async (): Promise<ISavedQuery[]> => {
@@ -162,9 +165,9 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
         });
         provider.setColumns(USER_QUERY_COLUMNS);
         provider.addEventListener('onAfterRecordSaved', (result) => {
-            if(result.success) {
+            if (result.success) {
                 const updatedQuery = this._userQueries.find(q => q.id === result.recordId);
-                if(updatedQuery) {
+                if (updatedQuery) {
                     updatedQuery.name = provider.getRecordsMap()[result.recordId].getValue('name');
                 }
             }
@@ -173,14 +176,14 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
         return provider;
     }
 
-    public onCreateTemplateDataProvider() {
-        const provider = new MemoryDataProvider({
-            dataSource: SAMPLE_TEMPLATES,
-            metadata: TEMPLATE_METADATA,
-        });
-        provider.setColumns(TEMPLATE_COLUMNS);
-        return provider;
-    }
+    /*     public onCreateTemplateDataProvider() {
+            const provider = new MemoryDataProvider({
+                dataSource: SAMPLE_TEMPLATES,
+                metadata: TEMPLATE_METADATA,
+            });
+            provider.setColumns(TEMPLATE_COLUMNS);
+            return provider;
+        } */
 
     public onGetHeight(): string {
         return '600px';
@@ -188,7 +191,20 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
 
     public onGetGridParameters(): ITaskGridParameters {
         return {
-            enableTaskEditing: true
+            enableRowDragging: true,
+            enableTaskDeletion: true,
+            enableTaskCreation: true,
+            enableInlineCreation: true,
+            enableTaskEditing: true,
+            /*             enableTaskEditing: true,
+                        enableUserQueries: true,
+                        enableQueryManager: true,
+                        enableQuickFind: true,
+                        enableEditColumns: true,
+                        enableRowDragging: true,
+                        enableSaveAsNewQuery: true,
+                        enableTaskDeletion: true, */
+            //enableQuickFind: true
         };
     }
 

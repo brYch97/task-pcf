@@ -1,5 +1,6 @@
 import { IColumn, IMemoryProviderEntityMetadata, MemoryDataProvider } from "@talxis/client-libraries";
 import { IFieldMapping, ITaskGridDescriptor, ITaskGridParameters, ITaskStrategyDeps } from "@talxis/base-controls";
+import { IGridCustomizerStrategy } from "@talxis/base-controls/dist/components/TaskGrid/components/grid/grid-customizer";
 import {
     IDeletedUserQueriesResult,
     ISavedQuery,
@@ -15,6 +16,7 @@ import {
     TEMPLATE_METADATA,
 } from "./MemoryTaskData";
 import { MemoryTaskStrategy } from "./MemoryTaskStrategy";
+import { MemoryGridCustomizerStrategy } from "./MemoryGridCustomizerStrategy";
 
 // ─── User-query data-provider metadata ───────────────────────────────────────
 
@@ -188,6 +190,10 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
         return {
             enableTaskEditing: true
         };
+    }
+
+    public onCreateGridCustomizerStrategy(): IGridCustomizerStrategy {
+        return new MemoryGridCustomizerStrategy();
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────

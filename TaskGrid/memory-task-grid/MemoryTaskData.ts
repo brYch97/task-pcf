@@ -1,5 +1,6 @@
 import { IColumn, IMemoryProviderEntityMetadata, IRawRecord } from "@talxis/client-libraries";
 import { LexoRank } from "lexorank";
+import { personRef, tagRef } from "./MemoryLookupManyData";
 
 // ─── Column names ─────────────────────────────────────────────────────────────
 
@@ -107,12 +108,28 @@ export const COLUMNS: IColumn[] = [
         dataType: 'SingleLine.Text',
         displayName: 'Assigned To',
         visualSizeFactor: 150,
+        metadata: { LookupMany: true },
+        controls: [{
+            name: 'PeopleLookupMany',
+            appliesTo: 'both' as const,
+            bindings: {
+                ImageUrlPropertyName: { value: 'imageurl', type: 'SingleLine.Text' as const },
+            },
+        }],
     },
     {
         name: 'tags',
         dataType: 'SingleLine.Text',
         displayName: 'Tags',
         visualSizeFactor: 200,
+        metadata: { LookupMany: true },
+        controls: [{
+            name: 'ColorfulLookupMany',
+            appliesTo: 'both' as const,
+            bindings: {
+                ColorPropertyName: { value: 'color', type: 'SingleLine.Text' as const },
+            },
+        }],
     },
     // ── Native (hidden) columns ──────────────────────────────────────────────
     { name: PRIMARY_ID, dataType: 'SingleLine.Text', displayName: 'ID', isHidden: true },
@@ -230,7 +247,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 60,
         scheduledstart: '2025-10-01', scheduledend: '2026-01-31',
         estimatedeffort: 480, actualeffort: 290,
-        assignedto: 'Alex Chen', tags: 'design,frontend,backend',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('design'), tagRef('frontend'), tagRef('backend')],
         description: 'Complete overhaul of the public-facing website including UX redesign, content migration and performance improvements.',
     },
     // L1 tasks
@@ -240,7 +257,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-10-01', scheduledend: '2025-10-31',
         estimatedeffort: 40, actualeffort: 42,
-        assignedto: 'Sam Rivera', tags: 'requirements,planning',
+        assignedto: [personRef('Sam Rivera')], tags: [tagRef('requirements'), tagRef('planning')],
         description: 'Gather requirements, conduct stakeholder interviews and perform competitive analysis.',
     },
     {
@@ -249,7 +266,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-11-01', scheduledend: '2025-11-28',
         estimatedeffort: 80, actualeffort: 76,
-        assignedto: 'Sam Rivera', tags: 'design,ux',
+        assignedto: [personRef('Sam Rivera')], tags: [tagRef('design'), tagRef('ux')],
         description: 'User journey mapping, wireframing, and high-fidelity mockup creation.',
     },
     {
@@ -258,7 +275,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 55,
         scheduledstart: '2025-12-01', scheduledend: '2026-01-15',
         estimatedeffort: 200, actualeffort: 110,
-        assignedto: 'Alex Chen', tags: 'frontend,react',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('frontend'), tagRef('react')],
         description: 'Build the new component library and implement all page templates.',
     },
     {
@@ -267,7 +284,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 3, priority: 1, percentcomplete: 30,
         scheduledstart: '2026-01-01', scheduledend: '2026-01-20',
         estimatedeffort: 60, actualeffort: 18,
-        assignedto: 'Jamie Walsh', tags: 'content,seo',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('content'), tagRef('seo')],
         description: 'Migrate all existing content to the new CMS, set up URL redirects.',
     },
     {
@@ -276,7 +293,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-01-16', scheduledend: '2026-01-31',
         estimatedeffort: 60, actualeffort: 0,
-        assignedto: 'Chris Kim', tags: 'testing,qa,performance',
+        assignedto: [personRef('Chris Kim')], tags: [tagRef('testing'), tagRef('qa'), tagRef('performance')],
         description: 'Cross-browser testing, accessibility audit and final performance optimisation.',
     },
     // L2 subtasks under Discovery & Planning
@@ -286,7 +303,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-10-01', scheduledend: '2025-10-10',
         estimatedeffort: 16, actualeffort: 18,
-        assignedto: 'Sam Rivera', tags: 'requirements',
+        assignedto: [personRef('Sam Rivera')], tags: [tagRef('requirements')],
         description: 'Interview key stakeholders to capture business goals and pain points.',
     },
     {
@@ -295,7 +312,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 1, percentcomplete: 100,
         scheduledstart: '2025-10-11', scheduledend: '2025-10-31',
         estimatedeffort: 24, actualeffort: 24,
-        assignedto: 'Alex Chen', tags: 'research',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('research')],
         description: 'Analyse top competitors, identify design trends and benchmark site performance.',
     },
     // L2 subtasks under UX/UI Design
@@ -305,7 +322,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-11-01', scheduledend: '2025-11-07',
         estimatedeffort: 16, actualeffort: 14,
-        assignedto: 'Sam Rivera', tags: 'ux,design',
+        assignedto: [personRef('Sam Rivera')], tags: [tagRef('ux'), tagRef('design')],
         description: 'Map out all primary user flows to identify friction points.',
     },
     {
@@ -314,7 +331,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-11-08', scheduledend: '2025-11-18',
         estimatedeffort: 30, actualeffort: 28,
-        assignedto: 'Sam Rivera', tags: 'ux,wireframe',
+        assignedto: [personRef('Sam Rivera')], tags: [tagRef('ux'), tagRef('wireframe')],
         description: 'Create low-fidelity wireframes for all key pages.',
     },
     {
@@ -323,7 +340,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-11-19', scheduledend: '2025-11-28',
         estimatedeffort: 34, actualeffort: 34,
-        assignedto: 'Sam Rivera', tags: 'design,ui',
+        assignedto: [personRef('Sam Rivera')], tags: [tagRef('design'), tagRef('ui')],
         description: 'Produce pixel-perfect mockups and an interactive prototype.',
     },
     // L2 subtasks under Frontend Development
@@ -333,7 +350,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-12-01', scheduledend: '2025-12-10',
         estimatedeffort: 32, actualeffort: 30,
-        assignedto: 'Alex Chen', tags: 'frontend,design-system',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('frontend'), tagRef('design-system')],
         description: 'Establish a shared component library with tokens, typography, and colours.',
     },
     {
@@ -342,7 +359,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-12-11', scheduledend: '2025-12-20',
         estimatedeffort: 40, actualeffort: 38,
-        assignedto: 'Alex Chen', tags: 'frontend',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('frontend')],
         description: 'Implement the homepage with animated hero, feature highlights, and CTA sections.',
     },
     {
@@ -351,7 +368,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 60,
         scheduledstart: '2025-12-21', scheduledend: '2026-01-07',
         estimatedeffort: 60, actualeffort: 36,
-        assignedto: 'Alex Chen', tags: 'frontend',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('frontend')],
         description: 'Build filterable product listing with lazy-load, quick-view, and sorting.',
     },
     {
@@ -360,7 +377,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 3, percentcomplete: 0,
         scheduledstart: '2026-01-08', scheduledend: '2026-01-15',
         estimatedeffort: 50, actualeffort: 0,
-        assignedto: 'Alex Chen', tags: 'frontend,payments',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('frontend'), tagRef('payments')],
         description: 'Multi-step checkout with address, payment, and order-confirmation screens.',
     },
     // L2 subtasks under Content Migration
@@ -370,7 +387,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 1, percentcomplete: 100,
         scheduledstart: '2026-01-01', scheduledend: '2026-01-08',
         estimatedeffort: 16, actualeffort: 15,
-        assignedto: 'Jamie Walsh', tags: 'content',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('content')],
         description: 'Audit all existing pages and assets; classify for keep / update / retire.',
     },
     {
@@ -379,7 +396,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 3, priority: 1, percentcomplete: 20,
         scheduledstart: '2026-01-09', scheduledend: '2026-01-20',
         estimatedeffort: 24, actualeffort: 5,
-        assignedto: 'Jamie Walsh', tags: 'seo,content',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('seo'), tagRef('content')],
         description: 'Map all old URLs to new slugs and configure 301 redirects.',
     },
     // L2 subtasks under Launch & QA
@@ -389,7 +406,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-01-16', scheduledend: '2026-01-22',
         estimatedeffort: 20, actualeffort: 0,
-        assignedto: 'Chris Kim', tags: 'testing,qa',
+        assignedto: [personRef('Chris Kim')], tags: [tagRef('testing'), tagRef('qa')],
         description: 'Verify layout and functionality on Chrome, Firefox, Safari, Edge, and iOS/Android.',
     },
     {
@@ -398,7 +415,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-01-23', scheduledend: '2026-01-27',
         estimatedeffort: 16, actualeffort: 0,
-        assignedto: 'Alex Chen', tags: 'performance,frontend',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('performance'), tagRef('frontend')],
         description: 'Achieve Core Web Vitals score ≥ 90 on mobile and desktop.',
     },
     {
@@ -407,7 +424,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-01-28', scheduledend: '2026-01-31',
         estimatedeffort: 12, actualeffort: 0,
-        assignedto: 'Chris Kim', tags: 'a11y,testing',
+        assignedto: [personRef('Chris Kim')], tags: [tagRef('a11y'), tagRef('testing')],
         description: 'Ensure WCAG 2.1 AA compliance; fix all critical and major issues.',
     },
 
@@ -420,7 +437,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 3, percentcomplete: 45,
         scheduledstart: '2025-09-01', scheduledend: '2026-03-31',
         estimatedeffort: 600, actualeffort: 270,
-        assignedto: 'Maya Patel', tags: 'api,backend,architecture',
+        assignedto: [personRef('Maya Patel')], tags: [tagRef('api'), tagRef('backend'), tagRef('architecture')],
         description: 'Ground-up rewrite of the REST API with versioning, improved auth, and a public developer portal.',
     },
     {
@@ -429,7 +446,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-09-01', scheduledend: '2025-09-30',
         estimatedeffort: 40, actualeffort: 48,
-        assignedto: 'Maya Patel', tags: 'architecture,api',
+        assignedto: [personRef('Maya Patel')], tags: [tagRef('architecture'), tagRef('api')],
         description: 'Define API versioning strategy, contract-first design and technology stack.',
     },
     {
@@ -438,7 +455,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-09-15', scheduledend: '2025-09-30',
         estimatedeffort: 16, actualeffort: 20,
-        assignedto: 'Maya Patel', tags: 'architecture',
+        assignedto: [personRef('Maya Patel')], tags: [tagRef('architecture')],
         description: 'Establish a cross-team review board and sign off on the final spec.',
     },
     {
@@ -447,7 +464,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-10-01', scheduledend: '2025-11-15',
         estimatedeffort: 80, actualeffort: 90,
-        assignedto: 'Taylor Morgan', tags: 'security,auth,oauth',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('security'), tagRef('auth'), tagRef('oauth')],
         description: 'Implement OAuth 2.0 with PKCE, JWT short-lived tokens, and API key management.',
     },
     {
@@ -456,7 +473,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-10-01', scheduledend: '2025-10-31',
         estimatedeffort: 48, actualeffort: 55,
-        assignedto: 'Taylor Morgan', tags: 'auth,oauth,security',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('auth'), tagRef('oauth'), tagRef('security')],
         description: 'Integrate an OAuth 2.0 provider with PKCE flow and token refresh logic.',
     },
     {
@@ -465,7 +482,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-11-01', scheduledend: '2025-11-15',
         estimatedeffort: 24, actualeffort: 24,
-        assignedto: 'Taylor Morgan', tags: 'auth,api',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('auth'), tagRef('api')],
         description: 'Self-service portal for generating, rotating and revoking API keys.',
     },
     {
@@ -474,7 +491,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 3, percentcomplete: 60,
         scheduledstart: '2025-11-16', scheduledend: '2026-01-31',
         estimatedeffort: 200, actualeffort: 120,
-        assignedto: 'Maya Patel', tags: 'backend,api',
+        assignedto: [personRef('Maya Patel')], tags: [tagRef('backend'), tagRef('api')],
         description: 'Build and document all v2 CRUD endpoints for core resources.',
     },
     {
@@ -483,7 +500,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-11-16', scheduledend: '2025-12-15',
         estimatedeffort: 60, actualeffort: 62,
-        assignedto: 'Maya Patel', tags: 'backend,api',
+        assignedto: [personRef('Maya Patel')], tags: [tagRef('backend'), tagRef('api')],
         description: 'Full CRUD for user profiles, organisation membership, and preferences.',
     },
     {
@@ -492,7 +509,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 70,
         scheduledstart: '2025-12-16', scheduledend: '2026-01-15',
         estimatedeffort: 70, actualeffort: 49,
-        assignedto: 'Maya Patel', tags: 'backend,catalog',
+        assignedto: [personRef('Maya Patel')], tags: [tagRef('backend'), tagRef('catalog')],
         description: 'Endpoints for product listings, variants, pricing, and inventory.',
     },
     {
@@ -501,7 +518,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 3, percentcomplete: 0,
         scheduledstart: '2026-01-16', scheduledend: '2026-01-31',
         estimatedeffort: 70, actualeffort: 0,
-        assignedto: 'Maya Patel', tags: 'backend,billing',
+        assignedto: [personRef('Maya Patel')], tags: [tagRef('backend'), tagRef('billing')],
         description: 'Order lifecycle management including placement, fulfilment, and refunds.',
     },
     {
@@ -510,7 +527,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 3, priority: 2, percentcomplete: 15,
         scheduledstart: '2026-02-01', scheduledend: '2026-02-28',
         estimatedeffort: 40, actualeffort: 6,
-        assignedto: 'Jordan Lee', tags: 'backend,performance',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('backend'), tagRef('performance')],
         description: 'Implement per-tier rate limiting with Redis-backed sliding-window counters and response caching.',
     },
     {
@@ -519,7 +536,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-03-01', scheduledend: '2026-03-31',
         estimatedeffort: 60, actualeffort: 0,
-        assignedto: 'Jamie Walsh', tags: 'docs,api',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('docs'), tagRef('api')],
         description: 'Interactive developer portal with guides, changelogs, and a request playground.',
     },
     {
@@ -528,7 +545,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-03-01', scheduledend: '2026-03-15',
         estimatedeffort: 24, actualeffort: 0,
-        assignedto: 'Maya Patel', tags: 'api,docs',
+        assignedto: [personRef('Maya Patel')], tags: [tagRef('api'), tagRef('docs')],
         description: 'Maintain a single source-of-truth OpenAPI 3.1 specification for all endpoints.',
     },
     {
@@ -537,7 +554,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 1, percentcomplete: 0,
         scheduledstart: '2026-03-16', scheduledend: '2026-03-31',
         estimatedeffort: 24, actualeffort: 0,
-        assignedto: 'Jamie Walsh', tags: 'docs,sdk',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('docs'), tagRef('sdk')],
         description: 'Provide idiomatic code samples in Python, TypeScript, and Go.',
     },
 
@@ -550,7 +567,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 3, percentcomplete: 40,
         scheduledstart: '2025-11-01', scheduledend: '2026-04-30',
         estimatedeffort: 700, actualeffort: 280,
-        assignedto: 'Alex Chen', tags: 'mobile,react-native',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('mobile'), tagRef('react-native')],
         description: 'Cross-platform mobile app using React Native targeting iOS 16+ and Android 12+.',
     },
     {
@@ -559,7 +576,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-11-01', scheduledend: '2025-11-15',
         estimatedeffort: 40, actualeffort: 38,
-        assignedto: 'Jordan Lee', tags: 'mobile,ci-cd',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('mobile'), tagRef('ci-cd')],
         description: 'Repository, monorepo tooling, CI/CD, code signing, and store accounts.',
     },
     {
@@ -568,7 +585,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-11-01', scheduledend: '2025-11-05',
         estimatedeffort: 16, actualeffort: 14,
-        assignedto: 'Alex Chen', tags: 'architecture,mobile',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('architecture'), tagRef('mobile')],
         description: 'Decide navigation library, state management, and offline-first strategy.',
     },
     {
@@ -577,7 +594,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-11-06', scheduledend: '2025-11-15',
         estimatedeffort: 24, actualeffort: 24,
-        assignedto: 'Jordan Lee', tags: 'ci-cd,mobile',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('ci-cd'), tagRef('mobile')],
         description: 'Automated test runs, code signing, and OTA deployment via Expo EAS.',
     },
     {
@@ -586,7 +603,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 3, percentcomplete: 50,
         scheduledstart: '2025-11-16', scheduledend: '2026-02-28',
         estimatedeffort: 300, actualeffort: 150,
-        assignedto: 'Alex Chen', tags: 'mobile,frontend',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('mobile'), tagRef('frontend')],
         description: 'Build all primary screens following the approved design system.',
     },
     {
@@ -595,7 +612,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-11-16', scheduledend: '2025-12-05',
         estimatedeffort: 60, actualeffort: 65,
-        assignedto: 'Alex Chen', tags: 'mobile,ux',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('mobile'), tagRef('ux')],
         description: 'Welcome screens, permissions, account creation, and biometric set-up.',
     },
     {
@@ -604,7 +621,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-12-06', scheduledend: '2025-12-31',
         estimatedeffort: 60, actualeffort: 60,
-        assignedto: 'Alex Chen', tags: 'mobile,dashboard',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('mobile'), tagRef('dashboard')],
         description: 'Personalised dashboard with activity feed, quick actions, and KPI tiles.',
     },
     {
@@ -613,7 +630,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 40,
         scheduledstart: '2026-01-01', scheduledend: '2026-01-31',
         estimatedeffort: 80, actualeffort: 32,
-        assignedto: 'Alex Chen', tags: 'mobile,catalog',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('mobile'), tagRef('catalog')],
         description: 'Infinite scroll product grid with search filters and swipe gestures.',
     },
     {
@@ -622,7 +639,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 1, percentcomplete: 0,
         scheduledstart: '2026-02-01', scheduledend: '2026-02-28',
         estimatedeffort: 40, actualeffort: 0,
-        assignedto: 'Alex Chen', tags: 'mobile,profile',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('mobile'), tagRef('profile')],
         description: 'Settings, notification preferences, order history, and account deletion.',
     },
     {
@@ -631,7 +648,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 3, percentcomplete: 40,
         scheduledstart: '2025-12-01', scheduledend: '2026-03-31',
         estimatedeffort: 160, actualeffort: 64,
-        assignedto: 'Maya Patel', tags: 'mobile,api,backend',
+        assignedto: [personRef('Maya Patel')], tags: [tagRef('mobile'), tagRef('api'), tagRef('backend')],
         description: 'Integrate mobile client with Platform v2 APIs including auth, catalog, and orders.',
     },
     {
@@ -640,7 +657,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-12-01', scheduledend: '2025-12-31',
         estimatedeffort: 40, actualeffort: 38,
-        assignedto: 'Taylor Morgan', tags: 'auth,mobile',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('auth'), tagRef('mobile')],
         description: 'OAuth PKCE flow, biometric token storage, and session refresh logic.',
     },
     {
@@ -649,7 +666,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 25,
         scheduledstart: '2026-01-01', scheduledend: '2026-03-31',
         estimatedeffort: 80, actualeffort: 20,
-        assignedto: 'Maya Patel', tags: 'mobile,sync',
+        assignedto: [personRef('Maya Patel')], tags: [tagRef('mobile'), tagRef('sync')],
         description: 'Background sync of catalog and order data with conflict resolution.',
     },
     {
@@ -658,7 +675,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-03-01', scheduledend: '2026-04-15',
         estimatedeffort: 80, actualeffort: 0,
-        assignedto: 'Maya Patel', tags: 'mobile,offline',
+        assignedto: [personRef('Maya Patel')], tags: [tagRef('mobile'), tagRef('offline')],
         description: 'Allow browsing and adding to cart while offline; queue mutations for replay.',
     },
     {
@@ -667,7 +684,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-03-01', scheduledend: '2026-03-20',
         estimatedeffort: 40, actualeffort: 0,
-        assignedto: 'Maya Patel', tags: 'mobile,database',
+        assignedto: [personRef('Maya Patel')], tags: [tagRef('mobile'), tagRef('database')],
         description: 'Schema design and migration tooling for the on-device SQLite store.',
     },
     {
@@ -676,7 +693,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 3, percentcomplete: 0,
         scheduledstart: '2026-04-16', scheduledend: '2026-04-30',
         estimatedeffort: 24, actualeffort: 0,
-        assignedto: 'Jordan Lee', tags: 'mobile,release',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('mobile'), tagRef('release')],
         description: 'Prepare store listings, screenshots, privacy disclosures, and binary submission.',
     },
     {
@@ -685,7 +702,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 3, percentcomplete: 0,
         scheduledstart: '2026-04-16', scheduledend: '2026-04-23',
         estimatedeffort: 12, actualeffort: 0,
-        assignedto: 'Jordan Lee', tags: 'ios,release',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('ios'), tagRef('release')],
         description: 'App Store Connect setup, TestFlight beta, and production release.',
     },
     {
@@ -694,7 +711,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 3, percentcomplete: 0,
         scheduledstart: '2026-04-24', scheduledend: '2026-04-30',
         estimatedeffort: 8, actualeffort: 0,
-        assignedto: 'Jordan Lee', tags: 'android,release',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('android'), tagRef('release')],
         description: 'Google Play Console setup, internal testing, and production track promotion.',
     },
 
@@ -707,7 +724,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 55,
         scheduledstart: '2025-08-01', scheduledend: '2026-02-28',
         estimatedeffort: 400, actualeffort: 220,
-        assignedto: 'Jordan Lee', tags: 'devops,infrastructure',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('devops'), tagRef('infrastructure')],
         description: 'Modernise the delivery pipeline and cloud infrastructure for the next growth phase.',
     },
     {
@@ -716,7 +733,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-08-01', scheduledend: '2025-09-30',
         estimatedeffort: 120, actualeffort: 130,
-        assignedto: 'Jordan Lee', tags: 'ci-cd,devops',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('ci-cd'), tagRef('devops')],
         description: 'End-to-end automated pipeline from commit to production deployment.',
     },
     {
@@ -725,7 +742,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-08-01', scheduledend: '2025-08-20',
         estimatedeffort: 40, actualeffort: 42,
-        assignedto: 'Jordan Lee', tags: 'ci-cd,github-actions',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('ci-cd'), tagRef('github-actions')],
         description: 'Define reusable workflow templates for lint, test, build, and deploy stages.',
     },
     {
@@ -734,7 +751,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-08-21', scheduledend: '2025-09-10',
         estimatedeffort: 40, actualeffort: 45,
-        assignedto: 'Chris Kim', tags: 'ci-cd,testing',
+        assignedto: [personRef('Chris Kim')], tags: [tagRef('ci-cd'), tagRef('testing')],
         description: 'Unit, integration, and smoke test stages with coverage gates.',
     },
     {
@@ -743,7 +760,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-09-11', scheduledend: '2025-09-30',
         estimatedeffort: 24, actualeffort: 25,
-        assignedto: 'Jordan Lee', tags: 'docker,ci-cd',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('docker'), tagRef('ci-cd')],
         description: 'Multi-stage Dockerfiles, image tagging strategy, and registry configuration.',
     },
     {
@@ -752,7 +769,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 3, percentcomplete: 60,
         scheduledstart: '2025-10-01', scheduledend: '2025-12-31',
         estimatedeffort: 120, actualeffort: 72,
-        assignedto: 'Jordan Lee', tags: 'kubernetes,cloud',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('kubernetes'), tagRef('cloud')],
         description: 'Migrate workloads to managed Kubernetes with autoscaling and blue/green deployments.',
     },
     {
@@ -761,7 +778,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-10-01', scheduledend: '2025-11-15',
         estimatedeffort: 80, actualeffort: 85,
-        assignedto: 'Jordan Lee', tags: 'kubernetes,cloud',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('kubernetes'), tagRef('cloud')],
         description: 'EKS clusters (staging + prod), node groups, namespaces, and RBAC.',
     },
     {
@@ -770,7 +787,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 30,
         scheduledstart: '2025-11-16', scheduledend: '2025-12-31',
         estimatedeffort: 32, actualeffort: 10,
-        assignedto: 'Jordan Lee', tags: 'cloud,networking',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('cloud'), tagRef('networking')],
         description: 'ALB Ingress controller with SSL termination, WAF rules, and health checks.',
     },
     {
@@ -779,7 +796,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 50,
         scheduledstart: '2026-01-01', scheduledend: '2026-01-31',
         estimatedeffort: 80, actualeffort: 40,
-        assignedto: 'Jordan Lee', tags: 'monitoring,devops',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('monitoring'), tagRef('devops')],
         description: 'Full observability stack: metrics, logs, traces, and on-call alerting.',
     },
     {
@@ -788,7 +805,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 70,
         scheduledstart: '2026-01-01', scheduledend: '2026-01-20',
         estimatedeffort: 48, actualeffort: 34,
-        assignedto: 'Jordan Lee', tags: 'monitoring,grafana',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('monitoring'), tagRef('grafana')],
         description: 'Dashboards for API latency, error rate, pod resource usage, and business metrics.',
     },
     {
@@ -797,7 +814,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-01-21', scheduledend: '2026-01-31',
         estimatedeffort: 16, actualeffort: 0,
-        assignedto: 'Jordan Lee', tags: 'alerting,on-call',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('alerting'), tagRef('on-call')],
         description: 'Tie Grafana alerting rules to PagerDuty with escalation policies.',
     },
     {
@@ -806,7 +823,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-02-01', scheduledend: '2026-02-28',
         estimatedeffort: 60, actualeffort: 0,
-        assignedto: 'Jordan Lee', tags: 'dr,backup',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('dr'), tagRef('backup')],
         description: 'Documented recovery playbooks, automated backups, and quarterly failover drills.',
     },
     {
@@ -815,7 +832,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-02-01', scheduledend: '2026-02-15',
         estimatedeffort: 32, actualeffort: 0,
-        assignedto: 'Jordan Lee', tags: 'backup,dr',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('backup'), tagRef('dr')],
         description: 'Automated nightly snapshots for databases and object storage with 30-day retention.',
     },
     {
@@ -824,7 +841,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 1, percentcomplete: 0,
         scheduledstart: '2026-02-16', scheduledend: '2026-02-28',
         estimatedeffort: 16, actualeffort: 0,
-        assignedto: 'Jordan Lee', tags: 'dr,testing',
+        assignedto: [personRef('Jordan Lee')], tags: [tagRef('dr'), tagRef('testing')],
         description: 'Simulate RDS failover and restore; measure and document RTO/RPO.',
     },
 
@@ -837,7 +854,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 3, percentcomplete: 35,
         scheduledstart: '2025-09-01', scheduledend: '2026-06-30',
         estimatedeffort: 360, actualeffort: 126,
-        assignedto: 'Taylor Morgan', tags: 'security,compliance',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('security'), tagRef('compliance')],
         description: 'Harden the product and organisation against internal and external threats; achieve SOC 2 Type II.',
     },
     {
@@ -846,7 +863,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-09-01', scheduledend: '2025-10-31',
         estimatedeffort: 80, actualeffort: 96,
-        assignedto: 'Taylor Morgan', tags: 'security,audit',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('security'), tagRef('audit')],
         description: 'Third-party security audit covering infrastructure, application, and supply chain.',
     },
     {
@@ -855,7 +872,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-09-01', scheduledend: '2025-09-20',
         estimatedeffort: 24, actualeffort: 28,
-        assignedto: 'Taylor Morgan', tags: 'security,owasp',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('security'), tagRef('owasp')],
         description: 'Automated DAST scan with OWASP ZAP; triage and log all findings.',
     },
     {
@@ -864,7 +881,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-09-21', scheduledend: '2025-10-31',
         estimatedeffort: 40, actualeffort: 50,
-        assignedto: 'Taylor Morgan', tags: 'security,pentest',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('security'), tagRef('pentest')],
         description: 'Manual pen test by an external firm; remediate all critical and high findings.',
     },
     {
@@ -873,7 +890,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 3, percentcomplete: 50,
         scheduledstart: '2025-11-01', scheduledend: '2026-02-28',
         estimatedeffort: 100, actualeffort: 50,
-        assignedto: 'Taylor Morgan', tags: 'gdpr,compliance,legal',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('gdpr'), tagRef('compliance'), tagRef('legal')],
         description: 'Full GDPR compliance programme including data mapping, DPA, and user rights flows.',
     },
     {
@@ -882,7 +899,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2025-11-01', scheduledend: '2025-11-30',
         estimatedeffort: 32, actualeffort: 35,
-        assignedto: 'Taylor Morgan', tags: 'gdpr,data',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('gdpr'), tagRef('data')],
         description: 'Record of Processing Activities (RoPA) documenting all personal data flows.',
     },
     {
@@ -891,7 +908,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-12-01', scheduledend: '2025-12-20',
         estimatedeffort: 16, actualeffort: 14,
-        assignedto: 'Jamie Walsh', tags: 'gdpr,legal',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('gdpr'), tagRef('legal')],
         description: 'Plain-language privacy policy co-authored with legal counsel.',
     },
     {
@@ -900,7 +917,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 25,
         scheduledstart: '2026-01-01', scheduledend: '2026-01-31',
         estimatedeffort: 24, actualeffort: 6,
-        assignedto: 'Alex Chen', tags: 'gdpr,frontend',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('gdpr'), tagRef('frontend')],
         description: 'Granular consent banner, preference centre, and server-side consent signal.',
     },
     {
@@ -909,7 +926,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 3, percentcomplete: 0,
         scheduledstart: '2026-03-01', scheduledend: '2026-06-30',
         estimatedeffort: 120, actualeffort: 0,
-        assignedto: 'Taylor Morgan', tags: 'soc2,compliance',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('soc2'), tagRef('compliance')],
         description: 'Engage auditor, implement controls, and collect evidence for a 12-month observation period.',
     },
     {
@@ -918,7 +935,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 3, percentcomplete: 0,
         scheduledstart: '2026-03-01', scheduledend: '2026-04-30',
         estimatedeffort: 60, actualeffort: 0,
-        assignedto: 'Taylor Morgan', tags: 'soc2,docs',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('soc2'), tagRef('docs')],
         description: 'Write control narratives, policies, and evidence collection procedures.',
     },
     {
@@ -927,7 +944,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 40,
         scheduledstart: '2025-12-01', scheduledend: '2025-12-31',
         estimatedeffort: 40, actualeffort: 16,
-        assignedto: 'Taylor Morgan', tags: 'security,access',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('security'), tagRef('access')],
         description: 'Quarterly access review: least-privilege audit, MFA enforcement, and offboarding check.',
     },
     {
@@ -936,7 +953,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-12-01', scheduledend: '2025-12-15',
         estimatedeffort: 24, actualeffort: 22,
-        assignedto: 'Taylor Morgan', tags: 'security,rbac',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('security'), tagRef('rbac')],
         description: 'Review all IAM roles and service accounts; remove stale permissions.',
     },
     {
@@ -945,7 +962,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 50,
         scheduledstart: '2025-12-16', scheduledend: '2025-12-31',
         estimatedeffort: 8, actualeffort: 4,
-        assignedto: 'Taylor Morgan', tags: 'security,mfa',
+        assignedto: [personRef('Taylor Morgan')], tags: [tagRef('security'), tagRef('mfa')],
         description: 'Enforce TOTP MFA for all internal SSO accounts; block legacy auth.',
     },
 
@@ -958,7 +975,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 1, percentcomplete: 30,
         scheduledstart: '2025-10-01', scheduledend: '2026-05-31',
         estimatedeffort: 280, actualeffort: 84,
-        assignedto: 'Jamie Walsh', tags: 'docs,training',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('docs'), tagRef('training')],
         description: 'Comprehensive technical documentation and end-user training programme.',
     },
     {
@@ -967,7 +984,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 50,
         scheduledstart: '2025-10-01', scheduledend: '2026-01-31',
         estimatedeffort: 100, actualeffort: 50,
-        assignedto: 'Jamie Walsh', tags: 'docs,technical',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('docs'), tagRef('technical')],
         description: 'Architecture guides, API references, and contributo guides for internal and external developers.',
     },
     {
@@ -976,7 +993,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-10-01', scheduledend: '2025-11-15',
         estimatedeffort: 30, actualeffort: 32,
-        assignedto: 'Maya Patel', tags: 'docs,architecture',
+        assignedto: [personRef('Maya Patel')], tags: [tagRef('docs'), tagRef('architecture')],
         description: 'System architecture, component interactions, data flow diagrams, and ADRs.',
     },
     {
@@ -985,7 +1002,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 40,
         scheduledstart: '2025-11-16', scheduledend: '2026-01-15',
         estimatedeffort: 40, actualeffort: 16,
-        assignedto: 'Jamie Walsh', tags: 'docs,api',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('docs'), tagRef('api')],
         description: 'Auto-generated and hand-written reference for every endpoint, event, and webhook.',
     },
     {
@@ -994,7 +1011,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 1, percentcomplete: 0,
         scheduledstart: '2026-01-16', scheduledend: '2026-01-31',
         estimatedeffort: 16, actualeffort: 0,
-        assignedto: 'Alex Chen', tags: 'docs,engineering',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('docs'), tagRef('engineering')],
         description: 'ESLint config rationale, branch naming, PR template, and commit conventions.',
     },
     {
@@ -1003,7 +1020,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 35,
         scheduledstart: '2025-12-01', scheduledend: '2026-03-31',
         estimatedeffort: 80, actualeffort: 28,
-        assignedto: 'Jamie Walsh', tags: 'docs,user-guide',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('docs'), tagRef('user-guide')],
         description: 'Step-by-step guides for all major user journeys targeting non-technical audiences.',
     },
     {
@@ -1012,7 +1029,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 2, percentcomplete: 100,
         scheduledstart: '2025-12-01', scheduledend: '2025-12-20',
         estimatedeffort: 24, actualeffort: 26,
-        assignedto: 'Jamie Walsh', tags: 'docs,onboarding',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('docs'), tagRef('onboarding')],
         description: 'Five-minute quickstart guiding a new user to their first successful action.',
     },
     {
@@ -1021,7 +1038,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 3, priority: 1, percentcomplete: 20,
         scheduledstart: '2026-01-01', scheduledend: '2026-02-15',
         estimatedeffort: 24, actualeffort: 5,
-        assignedto: 'Jamie Walsh', tags: 'docs,support',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('docs'), tagRef('support')],
         description: 'Curated FAQ derived from support tickets; updated monthly.',
     },
     {
@@ -1030,7 +1047,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 1, percentcomplete: 0,
         scheduledstart: '2026-02-16', scheduledend: '2026-03-31',
         estimatedeffort: 32, actualeffort: 0,
-        assignedto: 'Jamie Walsh', tags: 'docs,advanced',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('docs'), tagRef('advanced')],
         description: 'Deep-dive guides for power users covering workflows, integrations, and automation.',
     },
     {
@@ -1039,7 +1056,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 1, percentcomplete: 0,
         scheduledstart: '2026-03-01', scheduledend: '2026-05-31',
         estimatedeffort: 80, actualeffort: 0,
-        assignedto: 'Jamie Walsh', tags: 'training',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('training')],
         description: 'Blended learning programme with videos, live workshops, and assessment quizzes.',
     },
     {
@@ -1048,7 +1065,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 1, percentcomplete: 0,
         scheduledstart: '2026-03-01', scheduledend: '2026-04-15',
         estimatedeffort: 40, actualeffort: 0,
-        assignedto: 'Jamie Walsh', tags: 'training,video',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('training'), tagRef('video')],
         description: 'Ten short-form screencasts covering the most common tasks.',
     },
     {
@@ -1057,7 +1074,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 1, percentcomplete: 0,
         scheduledstart: '2026-04-16', scheduledend: '2026-05-15',
         estimatedeffort: 24, actualeffort: 0,
-        assignedto: 'Jamie Walsh', tags: 'training,workshop',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('training'), tagRef('workshop')],
         description: 'Two-hour hands-on sessions for customer success and partner teams.',
     },
     {
@@ -1066,7 +1083,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 0, percentcomplete: 0,
         scheduledstart: '2026-05-16', scheduledend: '2026-05-31',
         estimatedeffort: 8, actualeffort: 0,
-        assignedto: 'Jamie Walsh', tags: 'training,assessment',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('training'), tagRef('assessment')],
         description: 'Online quizzes with certificates of completion for each learning module.',
     },
     {
@@ -1075,7 +1092,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 0, percentcomplete: 0,
         scheduledstart: '2026-04-01', scheduledend: '2026-05-31',
         estimatedeffort: 40, actualeffort: 0,
-        assignedto: 'Jamie Walsh', tags: 'i18n,docs',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('i18n'), tagRef('docs')],
         description: 'Translate key user guides and in-app strings into Spanish and French.',
     },
     {
@@ -1084,7 +1101,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 0, percentcomplete: 0,
         scheduledstart: '2026-04-01', scheduledend: '2026-04-30',
         estimatedeffort: 20, actualeffort: 0,
-        assignedto: 'Jamie Walsh', tags: 'i18n,spanish',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('i18n'), tagRef('spanish')],
         description: 'Professional translation of getting-started guide and UI strings.',
     },
     {
@@ -1093,7 +1110,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 0, percentcomplete: 0,
         scheduledstart: '2026-05-01', scheduledend: '2026-05-31',
         estimatedeffort: 20, actualeffort: 0,
-        assignedto: 'Jamie Walsh', tags: 'i18n,french',
+        assignedto: [personRef('Jamie Walsh')], tags: [tagRef('i18n'), tagRef('french')],
         description: 'Professional translation of getting-started guide and UI strings.',
     },
 
@@ -1106,7 +1123,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 25,
         scheduledstart: '2026-01-01', scheduledend: '2026-06-30',
         estimatedeffort: 350, actualeffort: 88,
-        assignedto: 'Riley Thompson', tags: 'analytics,data',
+        assignedto: [personRef('Riley Thompson')], tags: [tagRef('analytics'), tagRef('data')],
         description: 'Build a centralised analytics platform powering executive dashboards, operational reports, and ML forecasting.',
     },
     {
@@ -1115,7 +1132,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 3, percentcomplete: 50,
         scheduledstart: '2026-01-01', scheduledend: '2026-03-31',
         estimatedeffort: 120, actualeffort: 60,
-        assignedto: 'Riley Thompson', tags: 'data,pipeline,etl',
+        assignedto: [personRef('Riley Thompson')], tags: [tagRef('data'), tagRef('pipeline'), tagRef('etl')],
         description: 'Ingestion layer from all product databases and third-party tools into a centralised data warehouse.',
     },
     {
@@ -1124,7 +1141,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 5, priority: 3, percentcomplete: 100,
         scheduledstart: '2026-01-01', scheduledend: '2026-02-15',
         estimatedeffort: 60, actualeffort: 65,
-        assignedto: 'Riley Thompson', tags: 'etl,data',
+        assignedto: [personRef('Riley Thompson')], tags: [tagRef('etl'), tagRef('data')],
         description: 'Apache Airflow DAGs for daily extraction from Postgres, Stripe, and Mixpanel.',
     },
     {
@@ -1133,7 +1150,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 30,
         scheduledstart: '2026-02-16', scheduledend: '2026-03-31',
         estimatedeffort: 40, actualeffort: 12,
-        assignedto: 'Riley Thompson', tags: 'data,warehouse',
+        assignedto: [personRef('Riley Thompson')], tags: [tagRef('data'), tagRef('warehouse')],
         description: 'Star schema design in Snowflake covering orders, users, events, and financials.',
     },
     {
@@ -1142,7 +1159,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 20,
         scheduledstart: '2026-03-01', scheduledend: '2026-05-31',
         estimatedeffort: 130, actualeffort: 26,
-        assignedto: 'Riley Thompson', tags: 'analytics,dashboard',
+        assignedto: [personRef('Riley Thompson')], tags: [tagRef('analytics'), tagRef('dashboard')],
         description: 'Self-service dashboards in Metabase for exec, sales, and ops purposes.',
     },
     {
@@ -1151,7 +1168,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 2, priority: 2, percentcomplete: 30,
         scheduledstart: '2026-03-01', scheduledend: '2026-04-15',
         estimatedeffort: 50, actualeffort: 15,
-        assignedto: 'Riley Thompson', tags: 'analytics,executive',
+        assignedto: [personRef('Riley Thompson')], tags: [tagRef('analytics'), tagRef('executive')],
         description: 'Revenue, MRR, churn, NPS, and headcount at a glance.',
     },
     {
@@ -1160,7 +1177,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 1, percentcomplete: 0,
         scheduledstart: '2026-04-16', scheduledend: '2026-05-15',
         estimatedeffort: 40, actualeffort: 0,
-        assignedto: 'Riley Thompson', tags: 'analytics,sales',
+        assignedto: [personRef('Riley Thompson')], tags: [tagRef('analytics'), tagRef('sales')],
         description: 'Pipeline value, conversion rates, rep leaderboard, and quota attainment.',
     },
     {
@@ -1169,7 +1186,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 1, percentcomplete: 0,
         scheduledstart: '2026-05-16', scheduledend: '2026-05-31',
         estimatedeffort: 32, actualeffort: 0,
-        assignedto: 'Riley Thompson', tags: 'analytics,ops',
+        assignedto: [personRef('Riley Thompson')], tags: [tagRef('analytics'), tagRef('ops')],
         description: 'Support ticket volume, resolution time, and incident MTTR.',
     },
     {
@@ -1178,7 +1195,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 1, percentcomplete: 0,
         scheduledstart: '2026-05-01', scheduledend: '2026-06-15',
         estimatedeffort: 60, actualeffort: 0,
-        assignedto: 'Riley Thompson', tags: 'analytics,reports',
+        assignedto: [personRef('Riley Thompson')], tags: [tagRef('analytics'), tagRef('reports')],
         description: 'No-code report builder and scheduled PDF/CSV exports for non-analyst users.',
     },
     {
@@ -1187,7 +1204,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 1, percentcomplete: 0,
         scheduledstart: '2026-05-01', scheduledend: '2026-05-31',
         estimatedeffort: 40, actualeffort: 0,
-        assignedto: 'Alex Chen', tags: 'frontend,analytics',
+        assignedto: [personRef('Alex Chen')], tags: [tagRef('frontend'), tagRef('analytics')],
         description: 'Drag-and-drop query builder with chart types, filters, and calculated fields.',
     },
     {
@@ -1196,7 +1213,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 1, percentcomplete: 0,
         scheduledstart: '2026-06-01', scheduledend: '2026-06-15',
         estimatedeffort: 16, actualeffort: 0,
-        assignedto: 'Riley Thompson', tags: 'analytics,automation',
+        assignedto: [personRef('Riley Thompson')], tags: [tagRef('analytics'), tagRef('automation')],
         description: 'Cron-driven email delivery of report snapshots in PDF and CSV formats.',
     },
     {
@@ -1205,7 +1222,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-06-01', scheduledend: '2026-06-30',
         estimatedeffort: 80, actualeffort: 0,
-        assignedto: 'Riley Thompson', tags: 'ml,analytics,forecasting',
+        assignedto: [personRef('Riley Thompson')], tags: [tagRef('ml'), tagRef('analytics'), tagRef('forecasting')],
         description: 'Predictive models for demand forecasting and customer churn embedded in dashboards.',
     },
     {
@@ -1214,7 +1231,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-06-01', scheduledend: '2026-06-20',
         estimatedeffort: 48, actualeffort: 0,
-        assignedto: 'Riley Thompson', tags: 'ml,forecasting',
+        assignedto: [personRef('Riley Thompson')], tags: [tagRef('ml'), tagRef('forecasting')],
         description: 'Time-series model (Prophet or LSTM) predicting monthly order volumes by category.',
     },
     {
@@ -1223,7 +1240,7 @@ const TASKS: IRawRecord[] = [
         statuscode: 1, priority: 2, percentcomplete: 0,
         scheduledstart: '2026-06-21', scheduledend: '2026-06-30',
         estimatedeffort: 32, actualeffort: 0,
-        assignedto: 'Riley Thompson', tags: 'ml,churn',
+        assignedto: [personRef('Riley Thompson')], tags: [tagRef('ml'), tagRef('churn')],
         description: 'Binary classifier on user engagement signals; scores surfaced in the exec dashboard.',
     },
 ];

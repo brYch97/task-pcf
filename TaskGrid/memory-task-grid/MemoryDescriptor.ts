@@ -1,22 +1,20 @@
 import { IColumn, IMemoryProviderEntityMetadata, MemoryDataProvider } from "@talxis/client-libraries";
-import { INativeColumns, ITaskGridDescriptor, ITaskGridParameters, ITaskStrategyDeps } from "@talxis/base-controls";
+import { IFieldMapping, ITaskGridDescriptor, ITaskGridParameters, ITaskStrategyDeps } from "@talxis/base-controls";
 import {
     IDeletedUserQueriesResult,
     ISavedQuery,
     ISavedQueryStrategy,
-} from "@talxis/base-controls/dist/components/TaskGrid/data-providers";
+} from "@talxis/base-controls/dist/components/TaskGrid/providers";
 import {
     COLUMNS,
     PARENT_ID_COL,
-    PATH_COL,
-    PERCENT_COMPLETE_COL,
     SAMPLE_TEMPLATES,
     STACK_RANK_COL,
     STATE_CODE_COL,
     SUBJECT_COL,
     TEMPLATE_METADATA,
-    MemoryTaskStrategy,
-} from "./MemoryTaskStrategy";
+} from "./MemoryTaskData";
+import { MemoryTaskStrategy } from "./MemoryTaskStrategy";
 
 // ─── User-query data-provider metadata ───────────────────────────────────────
 
@@ -86,14 +84,12 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
 
     // ── ITaskGridDescriptor ──────────────────────────────────────────────────
 
-    public onGetNativeColumns(): INativeColumns {
+    public onGetFieldMapping(): IFieldMapping {
         return {
             subject: SUBJECT_COL,
             parentId: PARENT_ID_COL,
             stackRank: STACK_RANK_COL,
-            path: PATH_COL,
             stateCode: STATE_CODE_COL,
-            percentComplete: PERCENT_COMPLETE_COL,
         };
     }
 
@@ -184,14 +180,13 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
         return provider;
     }
 
+    public onGetHeight(): string {
+        return '600px';
+    }
+
     public onGetGridParameters(): ITaskGridParameters {
         return {
-            height: '600px',
-            enableRowDragging: true,
-            enableEditColumns: true,
-            enableShowHierarchyToggle: true,
-            enableHideInactiveTasksToggle: true,
-            enableEditColumnsScopeSelector: false,
+            enableTaskEditing: true
         };
     }
 

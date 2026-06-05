@@ -176,14 +176,14 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
         return provider;
     }
 
-    /*     public onCreateTemplateDataProvider() {
-            const provider = new MemoryDataProvider({
-                dataSource: SAMPLE_TEMPLATES,
-                metadata: TEMPLATE_METADATA,
-            });
-            provider.setColumns(TEMPLATE_COLUMNS);
-            return provider;
-        } */
+    public onCreateTemplateDataProvider() {
+        const provider = new MemoryDataProvider({
+            dataSource: SAMPLE_TEMPLATES,
+            metadata: TEMPLATE_METADATA,
+        });
+        provider.setColumns(TEMPLATE_COLUMNS);
+        return provider;
+    }
 
     public onGetHeight(): string {
         return '600px';
@@ -191,20 +191,12 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
 
     public onGetGridParameters(): ITaskGridParameters {
         return {
-            enableRowDragging: true,
-            enableTaskDeletion: true,
             enableTaskCreation: true,
-            enableInlineCreation: true,
-            enableTaskEditing: true,
-            /*             enableTaskEditing: true,
-                        enableUserQueries: true,
-                        enableQueryManager: true,
-                        enableQuickFind: true,
-                        enableEditColumns: true,
-                        enableRowDragging: true,
-                        enableSaveAsNewQuery: true,
-                        enableTaskDeletion: true, */
-            //enableQuickFind: true
+            enableHideInactiveTasksToggle: true,
+            enableShowHierarchyToggle: true,
+            enableNavigation: true,
+            enableTaskEditing: false,
+            enableEditColumns: true
         };
     }
 

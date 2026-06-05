@@ -6,6 +6,7 @@ import {
     PEOPLE, PEOPLE_COLUMNS, PEOPLE_METADATA,
     TAGS, TAGS_COLUMNS, TAGS_METADATA,
 } from "./MemoryLookupManyData";
+import { ThemeProvider } from "@fluentui/react";
 
 const ASSIGNED_TO_COL = 'assignedto';
 
@@ -22,6 +23,9 @@ export const MemoryLookupManyCellRenderer = (props: ICellProps) => {
         p.setColumns(TAGS_COLUMNS);
         return p;
     }, []);
-
-    return <LookupManyCellRenderer {...props} dataProvider={dataProvider} />;
+    return <ThemeProvider>
+        <LookupManyCellRenderer
+         {...props} 
+         dataProvider={dataProvider} />
+    </ThemeProvider>
 };

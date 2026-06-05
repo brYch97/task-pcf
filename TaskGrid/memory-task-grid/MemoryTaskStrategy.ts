@@ -263,6 +263,7 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
     }
 
     public async onEditTasks(_taskIds: string[]): Promise<IEditTasksResult | null> {
+        alert(`Edit tasks: ${_taskIds.join(', ')}`);
         // In-memory variant — editing happens inline in the grid; no modal needed.
         return null;
     }
@@ -356,6 +357,7 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
     }
 
     public async onOpenDatasetItem(_entityReference: ComponentFramework.EntityReference, _context?: { columnName?: string }): Promise<void> {
+        alert(`Open record ${_entityReference.id.guid} of type ${_entityReference.etn}`);
         // No-op for the in-memory variant.
     }
 

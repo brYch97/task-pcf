@@ -9,7 +9,7 @@ import {
 } from "@talxis/client-libraries";
 import {
     IDeleteTasksResult,
-    IEditTasksResult,
+    IOpenDatasetItemsResult,
     ITaskDataProvider,
     ITaskDataProviderStrategy,
 } from "@talxis/base-controls/dist/components/TaskGrid/providers";
@@ -30,6 +30,7 @@ import {
     _TEMPLATE_CHILDREN,
     _store,
 } from "./MemoryTaskData";
+import { ITaskStrategyDeps } from "@talxis/base-controls";
 
 export {
     COLUMNS,
@@ -50,14 +51,20 @@ export {
 
 let _newTaskCount = 0;
 
+
+interface IMemoryTaskStrategyParams {
+    deps: ITaskStrategyDeps;
+}
 // ─── Strategy ─────────────────────────────────────────────────────────────────
 
 export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
     private _data = _store;
     private _templateDataProvider?: IDataProvider;
+    private _isTaskEditingEnabled = false;
 
-    constructor(templateDataProvider?: IDataProvider) {
-        this._templateDataProvider = templateDataProvider;
+    constructor(deps: ITaskStrategyDeps) {
+        this._templateDataProvider = deps.templateDataProvider;
+        this._isTaskEditingEnabled = deps.enableTaskEditing ?? false;
     }
 
     private _provider!: ITaskDataProvider;
@@ -262,9 +269,9 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
         return created;
     }
 
-    public async onEditTasks(_taskIds: string[]): Promise<IEditTasksResult | null> {
-        alert(`Edit tasks: ${_taskIds.join(', ')}`);
-        // In-memory variant — editing happens inline in the grid; no modal needed.
+    public async onOpenDatasetItems(entityReferences: ComponentFramework.EntityReference[], isTaskEntity: boolean): Promise<IOpenDatasetItemsResult | null> {
+        const mode = this._isTaskEditingEnabled ? 'edit mode' : 'read-only mode';
+        alert(`Open ${isTaskEntity ? 'tasks' : 'related records'} (${mode}): ${entityReferences.map(r => r.name).join(', ')}`);
         return null;
     }
 
@@ -355,12 +362,6 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
         const statuscode = this._data.get(recordId)?.['statuscode'] as number ?? 1;
         return statuscode != 5 && statuscode != 6; // Completed and Cancelled are inactive
     }
-
-    public async onOpenDatasetItem(_entityReference: ComponentFramework.EntityReference, _context?: { columnName?: string }): Promise<void> {
-        alert(`Open record ${_entityReference.id.guid} of type ${_entityReference.etn}`);
-        // No-op for the in-memory variant.
-    }
-
     // ── Helpers ──────────────────────────────────────────────────────────────
 
     private _generateId(): string {

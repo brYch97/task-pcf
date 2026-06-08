@@ -98,7 +98,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
     }
 
     public onCreateTaskStrategy(deps: ITaskStrategyDeps) {
-        return new MemoryTaskStrategy(deps.templateDataProvider);
+        return new MemoryTaskStrategy(deps);
     }
 
     public onCreateSavedQueryStrategy(): ISavedQueryStrategy {
@@ -195,8 +195,17 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
             enableHideInactiveTasksToggle: true,
             enableShowHierarchyToggle: true,
             enableNavigation: true,
-            enableTaskEditing: false,
-            enableEditColumns: true
+            enableTaskEditing: true,
+            enableEditColumns: true,
+            enableInlineCreation: true,
+            enableQueryManager: true,
+            enableRowDragging: true,
+            enableQuickFind: true,
+            enableSaveAsNewQuery: true,
+            enableSaveQueryChanges: true,
+            enableTaskDeletion: true,
+            enableUserQueries: true,
+            enableViewSwitcher: true
         };
     }
 

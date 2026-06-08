@@ -1,0 +1,21 @@
+[   36465ms] [INFO] %cDownload the React DevTools for a better development experience: https://fb.me/react-devtools font-weight:bold @ https://unpkg.com/react-dom@16.14.0/umd/react-dom.development.js:25128
+[   36508ms] [LOG] Detected preferred language: en-US @ http://localhost:8181/harness.js:1
+[   36533ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:8181/favicon.ico:0
+[   36554ms] [LOG] Resource file 'localization/translations.1029.resx' loaded. @ http://localhost:8181/harness.js:1
+[   36558ms] [LOG] Resource file 'localization/translations.1033.resx' loaded. @ http://localhost:8181/harness.js:1
+[   36990ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://localhost:8181/bundle.js:194153
+[   37092ms] [LOG] Resource file 'bundle.js' loaded. @ http://localhost:8181/harness.js:1
+[   37096ms] [ERROR] Warning: `NaN` is an invalid value for the `%s` css style property.%s width 
+    in div (created by Dp)
+    in div (created by Dp)
+    in Dp (created by qp)
+    in div (created by qp)
+    in div (created by qp)
+    in qp @ https://unpkg.com/react-dom@16.14.0/umd/react-dom.development.js:81
+[   37137ms] [ERROR] **************************************************************************************************************************** @ http://localhost:8181/bundle.js:255254
+[   37137ms] [ERROR] ************************************************ AG Grid Enterprise License ************************************************ @ http://localhost:8181/bundle.js:255254
+[   37137ms] [ERROR] ************************************************** License Key Not Found *************************************************** @ http://localhost:8181/bundle.js:255254
+[   37137ms] [ERROR] * All AG Grid Enterprise features are unlocked for trial.                                                                  * @ http://localhost:8181/bundle.js:255257
+[   37137ms] [ERROR] * If you want to hide the watermark please email info@ag-grid.com for a trial license key.                                 * @ http://localhost:8181/bundle.js:255257
+[   37137ms] [ERROR] **************************************************************************************************************************** @ http://localhost:8181/bundle.js:255254
+[   37137ms] [ERROR] **************************************************************************************************************************** @ http://localhost:8181/bundle.js:255254

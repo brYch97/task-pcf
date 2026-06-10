@@ -17,3 +17,7 @@
 # MSBuild Binary and Structured Log
 *.binlog
 
+# Playwright artifacts
+/playwright-report
+/test-results
+

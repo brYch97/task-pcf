@@ -1,22 +1,22 @@
 import { IColumn, IMemoryProviderEntityMetadata, MemoryDataProvider } from "@talxis/client-libraries";
-import { INativeColumns, ITaskGridDescriptor, ITaskGridParameters, ITaskStrategyDeps } from "@talxis/base-controls";
+import { IFieldMapping, ITaskGridDescriptor, ITaskGridParameters, ITaskStrategyDeps } from "@talxis/base-controls";
+import { IGridCustomizerStrategy } from "@talxis/base-controls/dist/components/TaskGrid/components/grid/grid-customizer";
 import {
     IDeletedUserQueriesResult,
     ISavedQuery,
     ISavedQueryStrategy,
-} from "@talxis/base-controls/dist/components/TaskGrid/data-providers";
+} from "@talxis/base-controls/dist/components/TaskGrid/providers";
 import {
     COLUMNS,
     PARENT_ID_COL,
-    PATH_COL,
-    PERCENT_COMPLETE_COL,
     SAMPLE_TEMPLATES,
     STACK_RANK_COL,
     STATE_CODE_COL,
     SUBJECT_COL,
     TEMPLATE_METADATA,
-    MemoryTaskStrategy,
-} from "./MemoryTaskStrategy";
+} from "./MemoryTaskData";
+import { MemoryTaskStrategy } from "./MemoryTaskStrategy";
+import { MemoryGridCustomizerStrategy } from "./MemoryGridCustomizerStrategy";
 
 // ─── User-query data-provider metadata ───────────────────────────────────────
 
@@ -50,7 +50,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
             isFlatListEnabled: false,
             columns: COLUMNS.filter(c =>
                 c.isHidden ||
-                ['subject', 'statuscode', 'priority', 'scheduledend', 'assignedto', 'scheduledstart', 'scheduledend'].includes(c.name)
+                ['subject', 'statuscode', 'priority', 'scheduledend', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
             ),
             filtering: {
                 filterOperator: 1, // And
@@ -62,6 +62,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
                     },
                 ],
             },
+            quickFindColumns: [SUBJECT_COL]
         },
         {
             id: 'uq-default-02-0000-0000-000000000000',
@@ -69,7 +70,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
             isFlatListEnabled: false,
             columns: COLUMNS.filter(c =>
                 c.isHidden ||
-                ['subject', 'priority', 'scheduledend', 'estimatedeffort', 'assignedto', 'tags'].includes(c.name)
+                ['subject', 'priority', 'scheduledend', 'estimatedeffort', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
             ),
             filtering: {
                 filterOperator: 1, // And
@@ -81,26 +82,23 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
                     },
                 ],
             },
+            quickFindColumns: [SUBJECT_COL]
         },
     ];
 
     // ── ITaskGridDescriptor ──────────────────────────────────────────────────
 
-    public onGetNativeColumns(): INativeColumns {
+    public onGetFieldMapping(): IFieldMapping {
         return {
             subject: SUBJECT_COL,
             parentId: PARENT_ID_COL,
             stackRank: STACK_RANK_COL,
-            path: PATH_COL,
             stateCode: STATE_CODE_COL,
-            percentComplete: PERCENT_COMPLETE_COL,
-            startDate: 'scheduledstart',
-            endDate: 'scheduledend',
         };
     }
 
     public onCreateTaskStrategy(deps: ITaskStrategyDeps) {
-        return new MemoryTaskStrategy(deps.templateDataProvider);
+        return new MemoryTaskStrategy(deps);
     }
 
     public onCreateSavedQueryStrategy(): ISavedQueryStrategy {
@@ -114,6 +112,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
                         c.isHidden ||
                         ['subject', 'statuscode', 'priority', 'scheduledend', 'estimatedeffort', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
                     ),
+                    quickFindColumns: [SUBJECT_COL]
                 },
             ],
             onGetUserQueries: async (): Promise<ISavedQuery[]> => {
@@ -166,9 +165,9 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
         });
         provider.setColumns(USER_QUERY_COLUMNS);
         provider.addEventListener('onAfterRecordSaved', (result) => {
-            if(result.success) {
+            if (result.success) {
                 const updatedQuery = this._userQueries.find(q => q.id === result.recordId);
-                if(updatedQuery) {
+                if (updatedQuery) {
                     updatedQuery.name = provider.getRecordsMap()[result.recordId].getValue('name');
                 }
             }
@@ -186,15 +185,32 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
         return provider;
     }
 
+    public onGetHeight(): string {
+        return '600px';
+    }
+
     public onGetGridParameters(): ITaskGridParameters {
         return {
-            height: '100%',
-            enableRowDragging: true,
-            enableEditColumns: true,
-            enableShowHierarchyToggle: true,
+            enableTaskCreation: true,
             enableHideInactiveTasksToggle: true,
-            enableEditColumnsScopeSelector: false,
+            enableShowHierarchyToggle: true,
+            enableNavigation: true,
+            enableTaskEditing: true,
+            enableEditColumns: true,
+            enableInlineCreation: true,
+            enableQueryManager: true,
+            enableRowDragging: true,
+            enableQuickFind: true,
+            enableSaveAsNewQuery: true,
+            enableSaveQueryChanges: true,
+            enableTaskDeletion: true,
+            enableUserQueries: true,
+            enableViewSwitcher: true
         };
+    }
+
+    public onCreateGridCustomizerStrategy(): IGridCustomizerStrategy {
+        return new MemoryGridCustomizerStrategy();
     }
 
     // ── Helpers ──────────────────────────────────────────────────────────────

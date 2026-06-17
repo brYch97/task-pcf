@@ -112,6 +112,7 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
             },
             null,
         );
+        const { start, end } = this._getNewTaskStartDateEndDate(parentTaskId);
         const newTask: IRawRecord = {
             [PRIMARY_ID]: id,
             [PARENT_ID_VALUE_KEY]: parentTaskId ?? null,
@@ -125,8 +126,8 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
             assignedto: null,
             tags: null,
             description: null,
-            scheduledstart: null,
-            scheduledend: null,
+            scheduledstart: start,
+            scheduledend: end,
         };
         this._data.set(id, newTask);
         return newTask;
@@ -144,6 +145,140 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
             }
         }
         return { success: true, deletedTaskIds };
+    }
+
+    /** Fallback task span (one day) used when no existing task has measurable dates. */
+    private static readonly _DEFAULT_TASK_DURATION_MS = 24 * 60 * 60 * 1000;
+
+    /**
+     * Computes a meaningful start/end date (yyyy-mm-dd) for a task being created
+     * under `parentTaskId`. The start date is anchored to existing context and the
+     * end date is derived from the average duration of comparable tasks.
+     */
+    private _getNewTaskStartDateEndDate(parentTaskId?: string): { start: string; end: string } {
+        const startDate = this._resolveNewTaskStartDate(parentTaskId);
+        const durationMs = this._resolveTaskDuration(parentTaskId);
+        const endDate = new Date(startDate.getTime() + durationMs);
+        return {
+            start: this._formatDate(startDate),
+            end: this._formatDate(endDate),
+        };
+    }
+
+    /**
+     * Picks a start date for the new task:
+     * 1. align with the earliest existing sibling, otherwise
+     * 2. inherit the parent task's start date, otherwise
+     * 3. fall back to today.
+     */
+    private _resolveNewTaskStartDate(parentTaskId?: string): Date {
+        const siblingIds = (this._taskTree.getNode(parentTaskId ?? null)?.directChildren ?? [])
+            .map(c => c.getRecordId());
+        const earliestSiblingStart = this._getEarliestStartDate(siblingIds);
+        if (earliestSiblingStart) {
+            return earliestSiblingStart;
+        }
+
+        if (parentTaskId) {
+            const parentStart = this._parseDate(this._getTaskDate(parentTaskId, 'startDate'));
+            if (parentStart) {
+                return parentStart;
+            }
+        }
+
+        return new Date();
+    }
+
+    /**
+     * Estimates a task duration from existing data, widening the search until a
+     * measurable average is found:
+     * 1. the average of the group's own tasks, otherwise
+     * 2. the average of the parent's sibling level (the grandparent's children), otherwise
+     * 3. the average across every task, otherwise
+     * 4. a single-day default.
+     */
+    private _resolveTaskDuration(parentTaskId?: string): number {
+        const ownAverage = this._getAverageDuration(parentTaskId ?? null);
+        if (ownAverage !== null) {
+            return ownAverage;
+        }
+
+        if (parentTaskId) {
+            const grandParentId = this._getParentId(parentTaskId);
+            const peerAverage = this._getAverageDuration(grandParentId);
+            if (peerAverage !== null) {
+                return peerAverage;
+            }
+        }
+
+        const globalAverage = this._getAverageDuration(null, true);
+        if (globalAverage !== null) {
+            return globalAverage;
+        }
+
+        return MemoryTaskStrategy._DEFAULT_TASK_DURATION_MS;
+    }
+
+    /**
+     * Average duration (ms) of the direct children of `parentId`, or of every task
+     * when `allTasks` is set. Returns `null` when no task has a measurable span.
+     */
+    private _getAverageDuration(parentId: string | null, allTasks = false): number | null {
+        const taskIds = allTasks
+            ? [...this._data.keys()]
+            : (this._taskTree.getNode(parentId ?? null)?.directChildren ?? []).map(c => c.getRecordId());
+
+        let totalDurationMs = 0;
+        let durationCount = 0;
+
+        for (const taskId of taskIds) {
+            const startDate = this._parseDate(this._getTaskDate(taskId, 'startDate'));
+            const endDate = this._parseDate(this._getTaskDate(taskId, 'endDate'));
+            if (!startDate || !endDate || endDate < startDate) {
+                continue;
+            }
+            totalDurationMs += endDate.getTime() - startDate.getTime();
+            durationCount += 1;
+        }
+
+        return durationCount === 0 ? null : totalDurationMs / durationCount;
+    }
+
+    private _getEarliestStartDate(taskIds: string[]): Date | null {
+        let earliest: Date | null = null;
+        for (const taskId of taskIds) {
+            const startDate = this._parseDate(this._getTaskDate(taskId, 'startDate'));
+            if (startDate && (!earliest || startDate < earliest)) {
+                earliest = startDate;
+            }
+        }
+        return earliest;
+    }
+
+    private _getParentId(taskId: string): string | null {
+        return (this._data.get(taskId)?.[PARENT_ID_VALUE_KEY] as string) ?? null;
+    }
+
+    private _parseDate(value: string | null): Date | null {
+        if (!value) {
+            return null;
+        }
+        const parsed = new Date(value);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    private _formatDate(date: Date): string {
+        return date.toISOString().slice(0, 10);
+    }
+
+    private _getTaskDate(taskId: string, type: 'startDate' | 'endDate'): string | null {
+        const record = this._provider.getRecordsMap()[taskId];
+        const dateColumnName = this._provider.getNativeColumns()[type];
+        if (!record || !dateColumnName) {
+            return null;
+        }
+
+        return record.getValue(dateColumnName);
     }
 
     private _collectDescendants(id: string, result: Set<string>): void {
@@ -353,8 +488,10 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
                 updatedFields.push(col);
             }
         }
+        //TODO: only if start date or end date changed
 
         this._data.set(id, existing);
+
         return { recordId: id, success: true, fields: updatedFields };
     }
 

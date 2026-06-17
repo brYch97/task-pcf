@@ -9,14 +9,18 @@ import {
 import {
     COLUMNS,
     PARENT_ID_COL,
+    PERCENT_COMPLETE_COL,
     SAMPLE_TEMPLATES,
     STACK_RANK_COL,
     STATE_CODE_COL,
+    STATUS_CODE_COL,
     SUBJECT_COL,
     TEMPLATE_METADATA,
 } from "./MemoryTaskData";
 import { MemoryTaskStrategy } from "./MemoryTaskStrategy";
 import { MemoryGridCustomizerStrategy } from "./MemoryGridCustomizerStrategy";
+import { IExtensions } from "@talxis/base-controls/dist/components/TaskGrid";
+import { ProjectDataProvider } from "@talxis/base-controls/dist/components/TaskGrid/extensions/providers/project";
 
 // ─── User-query data-provider metadata ───────────────────────────────────────
 
@@ -94,11 +98,39 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
             parentId: PARENT_ID_COL,
             stackRank: STACK_RANK_COL,
             stateCode: STATE_CODE_COL,
+            statusCode: STATUS_CODE_COL,
+            percentComplete: PERCENT_COMPLETE_COL,
+            startDate: 'scheduledstart',
+            endDate: 'scheduledend',
         };
     }
 
     public onCreateTaskStrategy(deps: ITaskStrategyDeps) {
         return new MemoryTaskStrategy(deps);
+    }
+
+    public get extensions(): IExtensions {
+        return {
+            project: {
+                onCreateProjectDataProvider: () => {
+                    return new ProjectDataProvider({
+                        onLoadProjectData: async () => {
+                            return {
+                                endDate: new Date('2024-12-31'),
+                                startDate: new Date('2024-01-01'),
+                                entityReference: {
+                                    id: {
+                                        guid: 'Sample Project',
+                                    },
+                                    name: 'Sample Project',
+                                    entityType: 'project',
+                                },
+                            }
+                        }
+                    });
+                }
+            }
+        }
     }
 
     public onCreateSavedQueryStrategy(): ISavedQueryStrategy {
@@ -110,7 +142,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
                     isFlatListEnabled: false,
                     columns: COLUMNS.filter(c =>
                         c.isHidden ||
-                        ['subject', 'statuscode', 'priority', 'scheduledend', 'estimatedeffort', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
+                        ['subject', 'statuscode', 'priority', 'scheduledstart', 'scheduledend', 'estimatedeffort', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
                     ),
                     quickFindColumns: [SUBJECT_COL]
                 },
@@ -205,10 +237,13 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
             enableSaveQueryChanges: true,
             enableTaskDeletion: true,
             enableUserQueries: true,
-            enableViewSwitcher: true
+            enableViewSwitcher: true,
+            enableFiltering: true,
+            enableSorting: true
         };
     }
 
+    //@ts-ignore
     public onCreateGridCustomizerStrategy(): IGridCustomizerStrategy {
         return new MemoryGridCustomizerStrategy();
     }

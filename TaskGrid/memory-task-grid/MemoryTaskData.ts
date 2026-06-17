@@ -12,6 +12,7 @@ export const PARENT_ID_COL = 'parentid';
 export const PARENT_ID_VALUE_KEY = `_${PARENT_ID_COL}_value`;
 export const STACK_RANK_COL = 'stackrank';
 export const STATE_CODE_COL = 'statecode';
+export const STATUS_CODE_COL = 'statuscode';
 export const PERCENT_COMPLETE_COL = 'percentcomplete';
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
@@ -38,7 +39,7 @@ export const COLUMNS: IColumn[] = [
         visualSizeFactor: 300,
     },
     {
-        name: 'statuscode',
+        name: STATUS_CODE_COL,
         dataType: 'OptionSet',
         displayName: 'Status',
         visualSizeFactor: 145,

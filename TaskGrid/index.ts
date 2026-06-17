@@ -24,6 +24,7 @@ export class TaskGrid implements ComponentFramework.StandardControl<IInputs, IOu
         this._mockXrmForLocalDevelopment();
         this._container = container;
         this._context = context;
+        //@ts-ignore
         this._descriptor = new MemoryDescriptor();
     }
 

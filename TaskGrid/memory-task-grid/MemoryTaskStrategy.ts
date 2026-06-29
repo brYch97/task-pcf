@@ -488,17 +488,152 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
                 updatedFields.push(col);
             }
         }
-        //TODO: only if start date or end date changed
 
         this._data.set(id, existing);
 
         return { recordId: id, success: true, fields: updatedFields };
     }
 
+    /**
+     * Auto-scheduling engine — called after a task's dates change.
+     *
+     * Rules (matching Bryntum Gantt auto-schedule behaviour):
+     *
+     *  1. PARENT MOVE — if the changed task has children and its start date
+     *     shifted, ALL descendants are moved by the same offset (ms delta),
+     *     preserving their relative positions to each other.
+     *
+     *  2. ANCESTOR ROLL-UP — after any date change (on the leaf or after the
+     *     child shift above), every ancestor in the chain is recalculated so
+     *     that its bounds equal min(children.start) → max(children.end).
+     *     This propagates all the way to the root.
+     *
+     *  3. NO CLAMPING — children are never blocked from going before or after
+     *     a parent's current span; the parent simply expands / contracts to fit.
+     *
+     * TODO: finish-to-start dependency propagation (push successors when a
+     *       predecessor's end date moves).
+     *
+     * @returns All IRawRecord objects whose dates were mutated as a side-effect.
+     */
+    private _autoSchedule(changedTaskId: string, previousStart: string | null): IRawRecord[] {
+        const changed: IRawRecord[] = [];
+
+        // ── Rule 1: parent move → shift all descendants by the same delta ────
+        const hasChildren = (this._taskTree.getNode(changedTaskId)?.directChildren ?? []).length > 0;
+        if (previousStart !== null && hasChildren) {
+            const newStart = this._data.get(changedTaskId)?.scheduledstart as string ?? null;
+            const prevDate = this._parseDate(previousStart);
+            const newDate = this._parseDate(newStart);
+            if (prevDate && newDate) {
+                const offsetMs = newDate.getTime() - prevDate.getTime();
+                if (offsetMs !== 0) {
+                    this._shiftDescendants(changedTaskId, offsetMs, changed);
+                }
+            }
+        }
+
+        // ── Rule 2: roll up bounds through every ancestor ─────────────────────
+        let ancestorId = this._getParentId(changedTaskId);
+        while (ancestorId) {
+            const ancestor = this._data.get(ancestorId);
+            if (!ancestor) break;
+
+            const childIds = (this._taskTree.getNode(ancestorId)?.directChildren ?? [])
+                .map(c => c.getRecordId());
+
+            const bounds = this._getChildDateBounds(childIds);
+            if (!bounds) {
+                ancestorId = this._getParentId(ancestorId);
+                continue;
+            }
+
+            const newStart = this._formatDate(bounds.start);
+            const newEnd = this._formatDate(bounds.end);
+            let dirty = false;
+
+            if (ancestor.scheduledstart !== newStart) {
+                ancestor.scheduledstart = newStart;
+                dirty = true;
+            }
+            if (ancestor.scheduledend !== newEnd) {
+                ancestor.scheduledend = newEnd;
+                dirty = true;
+            }
+
+            if (dirty) {
+                this._data.set(ancestorId, ancestor);
+                changed.push(ancestor);
+            }
+
+            ancestorId = this._getParentId(ancestorId);
+        }
+
+        // TODO: Rule 3 — finish-to-start dependency propagation (successors)
+
+        return changed;
+    }
+
+    /**
+     * Recursively shifts every descendant of `parentId` by `offsetMs`,
+     * recording each mutated record in `changed`.
+     */
+    private _shiftDescendants(parentId: string, offsetMs: number, changed: IRawRecord[]): void {
+        const children = this._taskTree.getNode(parentId)?.directChildren ?? [];
+        for (const child of children) {
+            const childId = child.getRecordId();
+            const rec = this._data.get(childId);
+            if (!rec) continue;
+
+            const startDate = this._parseDate(rec.scheduledstart as string ?? null);
+            const endDate = this._parseDate(rec.scheduledend as string ?? null);
+            let dirty = false;
+
+            if (startDate) {
+                rec.scheduledstart = this._formatDate(new Date(startDate.getTime() + offsetMs));
+                dirty = true;
+            }
+            if (endDate) {
+                rec.scheduledend = this._formatDate(new Date(endDate.getTime() + offsetMs));
+                dirty = true;
+            }
+
+            if (dirty) {
+                this._data.set(childId, rec);
+                changed.push(rec);
+            }
+
+            // Recurse into grandchildren
+            this._shiftDescendants(childId, offsetMs, changed);
+        }
+    }
+
+    private _getChildDateBounds(taskIds: string[]): { start: Date; end: Date } | null {
+        let minStart: Date | null = null;
+        let maxEnd: Date | null = null;
+
+        for (const taskId of taskIds) {
+            const rawRecord = this._data.get(taskId);
+            const startDate = this._parseDate(rawRecord?.scheduledstart as string ?? null);
+            const endDate = this._parseDate(rawRecord?.scheduledend as string ?? null);
+
+            if (startDate && (!minStart || startDate < minStart)) {
+                minStart = startDate;
+            }
+            if (endDate && (!maxEnd || endDate > maxEnd)) {
+                maxEnd = endDate;
+            }
+        }
+
+        if (!minStart || !maxEnd) return null;
+        return { start: minStart, end: maxEnd };
+    }
+
     public onIsRecordActive(recordId: string): boolean {
         const statuscode = this._data.get(recordId)?.['statuscode'] as number ?? 1;
         return statuscode != 5 && statuscode != 6; // Completed and Cancelled are inactive
     }
+
     // ── Helpers ──────────────────────────────────────────────────────────────
 
     private _generateId(): string {

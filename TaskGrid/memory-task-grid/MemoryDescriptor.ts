@@ -21,6 +21,11 @@ import { MemoryTaskStrategy } from "./MemoryTaskStrategy";
 import { MemoryGridCustomizerStrategy } from "./MemoryGridCustomizerStrategy";
 import { IExtensions } from "@talxis/base-controls/dist/components/TaskGrid";
 import { ProjectDataProvider } from "@talxis/base-controls/dist/components/TaskGrid/extensions/providers/project";
+import { Gantt } from "@talxis/base-controls/dist/components/TaskGrid/components/gannt";
+import * as React from "react";
+import { IMarkerProps } from "@talxis/base-controls/dist/components/TaskGrid/components/gannt/components/marker";
+import { GanttComponents } from "@talxis/base-controls/dist/components/TaskGrid/components/gannt/components";
+import { ProjectStrategy } from "./ProjectStrategy";
 
 // ─── User-query data-provider metadata ───────────────────────────────────────
 
@@ -114,21 +119,21 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
             project: {
                 onCreateProjectDataProvider: () => {
                     return new ProjectDataProvider({
-                        onLoadProjectData: async () => {
-                            return {
-                                endDate: new Date('2024-12-31'),
-                                startDate: new Date('2024-01-01'),
-                                entityReference: {
-                                    id: {
-                                        guid: 'Sample Project',
-                                    },
-                                    name: 'Sample Project',
-                                    entityType: 'project',
-                                },
-                            }
-                        }
+                        strategy: new ProjectStrategy(this.onGetFieldMapping()),
                     });
                 }
+            },
+            gantt: {
+                onGetGanttComponent: (props) => React.createElement(Gantt, {
+                    ...props,
+                }),
+                onGetCustomMarkers: () => [{
+                    id: 'marker1',
+                    text: 'Custom Marker 1',
+                    color: 'green',
+                    start_date: new Date('2024-06-15'),
+                    end_date: new Date('2024-06-30'),
+                }]
             }
         }
     }

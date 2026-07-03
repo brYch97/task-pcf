@@ -8,6 +8,7 @@ import {
     IRecordSaveOperationResult,
 } from "@talxis/client-libraries";
 import {
+    ICreateTaskParameters,
     IDeleteTasksResult,
     IOpenDatasetItemsResult,
     ITaskDataProvider,
@@ -98,25 +99,19 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
         return [];
     }
 
-    public async onCreateTask(parentTaskId?: string): Promise<IRawRecord | null> {
+    public async onCreateTask(params: ICreateTaskParameters): Promise<IRawRecord | null> {
+        const name = window.prompt('Enter a name for the new task:');
+        if(!name) return null;
+        const parentTaskId = params?.parentId;
+        const previousTaskId = params?.previousTaskId;
+        const nextTaskId = params?.nextTaskId;
         const id = this._generateId();
         ++_newTaskCount;
-        // Prepend to the top of the group (or list if no parent).
-        const siblings = [...this._data.values()]
-            .filter(t => ((t[PARENT_ID_VALUE_KEY] as string) ?? null) === (parentTaskId ?? null));
-        const minRankEntry = siblings.reduce<string | null>(
-            (min, t) => {
-                const r = t[STACK_RANK_COL] as string;
-                if (!r) return min;
-                return min === null || LexoRank.parse(r).compareTo(LexoRank.parse(min)) < 0 ? r : min;
-            },
-            null,
-        );
-        const { start, end } = this._getNewTaskStartDateEndDate(parentTaskId);
         const newTask: IRawRecord = {
+            [SUBJECT_COL]: name,
             [PRIMARY_ID]: id,
             [PARENT_ID_VALUE_KEY]: parentTaskId ?? null,
-            [STACK_RANK_COL]: minRankEntry === null ? SEED_RANKS[0] : LexoRank.parse(minRankEntry).genPrev().format(),
+            [STACK_RANK_COL]: this._getNewTaskStackRank(parentTaskId, previousTaskId, nextTaskId),
             [STATE_CODE_COL]: 0,
             statuscode: 1,
             priority: 1,
@@ -126,11 +121,46 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
             assignedto: null,
             tags: null,
             description: null,
-            scheduledstart: start,
-            scheduledend: end,
+            scheduledstart: params?.data?.scheduledstart ?? this._getDefaultDate(parentTaskId, 'startDate'),
+            scheduledend: params?.data?.scheduledend ?? this._getDefaultDate(parentTaskId, 'endDate'),
         };
         this._data.set(id, newTask);
         return newTask;
+    }
+
+    private _getNewTaskStackRank(parentTaskId?: string, previousTaskId?: string, nextTaskId?: string): string {
+        const previousRank = previousTaskId ? this._data.get(previousTaskId)?.[STACK_RANK_COL] as string | undefined : undefined;
+        const nextRank = nextTaskId ? this._data.get(nextTaskId)?.[STACK_RANK_COL] as string | undefined : undefined;
+
+        if (previousRank && nextRank) {
+            return LexoRank.parse(previousRank).between(LexoRank.parse(nextRank)).format();
+        }
+
+        if (nextRank) {
+            return LexoRank.parse(nextRank).genPrev().format();
+        }
+
+        if (previousRank) {
+            return LexoRank.parse(previousRank).genNext().format();
+        }
+
+        return SEED_RANKS[0];
+    }
+
+    private _getDefaultDate(parentId: string | undefined, type: 'startDate' | 'endDate'): Date {
+        let date: Date | null = null;
+
+        if (parentId) {
+            date = this._parseDate(this._getTaskDate(parentId, type));
+        }
+        else if (this._provider.getProjectDataProvider()) {
+            const projectDataProvider = this._provider.getProjectDataProvider();
+            date = type === 'startDate'
+                ? projectDataProvider?.getProjectStartDate() ?? null
+                : projectDataProvider?.getProjectEndDate() ?? null;
+        }
+
+        return date ?? new Date();
     }
 
     public async onDeleteTasks(taskIds: string[]): Promise<IDeleteTasksResult> {

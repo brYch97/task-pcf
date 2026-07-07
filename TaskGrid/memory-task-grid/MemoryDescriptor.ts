@@ -59,7 +59,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
             isFlatListEnabled: false,
             columns: COLUMNS.filter(c =>
                 c.isHidden ||
-                ['subject', 'statuscode', 'priority', 'scheduledend', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
+                ['subject', 'stackrank', 'statuscode', 'priority', 'scheduledend', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
             ),
             filtering: {
                 filterOperator: 1, // And
@@ -79,7 +79,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
             isFlatListEnabled: false,
             columns: COLUMNS.filter(c =>
                 c.isHidden ||
-                ['subject', 'priority', 'scheduledend', 'estimatedeffort', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
+                ['subject', 'stackrank', 'priority', 'scheduledend', 'estimatedeffort', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
             ),
             filtering: {
                 filterOperator: 1, // And
@@ -123,7 +123,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
                     });
                 }
             },
-            gantt: {
+/*             gantt: {
                 onGetGanttComponent: (props) => React.createElement(Gantt, {
                     ...props,
                 }),
@@ -134,7 +134,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
                     start_date: new Date('2024-06-15'),
                     end_date: new Date('2024-06-30'),
                 }]
-            }
+            } */
         }
     }
 
@@ -147,7 +147,7 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
                     isFlatListEnabled: false,
                     columns: COLUMNS.filter(c =>
                         c.isHidden ||
-                        ['subject', 'statuscode', 'priority', 'scheduledstart', 'scheduledend', 'estimatedeffort', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
+                        ['subject', 'stackrank', 'statuscode', 'priority', 'scheduledstart', 'scheduledend', 'estimatedeffort', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
                     ),
                     quickFindColumns: [SUBJECT_COL]
                 },
@@ -222,9 +222,9 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
         return provider;
     }
 
-    public onGetHeight(): string {
+/*     public onGetHeight(): string {
         return '600px';
-    }
+    } */
 
     public onGetGridParameters(): ITaskGridParameters {
         return {

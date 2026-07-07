@@ -10,6 +10,7 @@ import {
 import {
     ICreateTaskParameters,
     IDeleteTasksResult,
+    IMoveTaskParameters,
     IOpenDatasetItemsResult,
     ITaskDataProvider,
     ITaskDataProviderStrategy,
@@ -177,118 +178,6 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
         return { success: true, deletedTaskIds };
     }
 
-    /** Fallback task span (one day) used when no existing task has measurable dates. */
-    private static readonly _DEFAULT_TASK_DURATION_MS = 24 * 60 * 60 * 1000;
-
-    /**
-     * Computes a meaningful start/end date (yyyy-mm-dd) for a task being created
-     * under `parentTaskId`. The start date is anchored to existing context and the
-     * end date is derived from the average duration of comparable tasks.
-     */
-    private _getNewTaskStartDateEndDate(parentTaskId?: string): { start: string; end: string } {
-        const startDate = this._resolveNewTaskStartDate(parentTaskId);
-        const durationMs = this._resolveTaskDuration(parentTaskId);
-        const endDate = new Date(startDate.getTime() + durationMs);
-        return {
-            start: this._formatDate(startDate),
-            end: this._formatDate(endDate),
-        };
-    }
-
-    /**
-     * Picks a start date for the new task:
-     * 1. align with the earliest existing sibling, otherwise
-     * 2. inherit the parent task's start date, otherwise
-     * 3. fall back to today.
-     */
-    private _resolveNewTaskStartDate(parentTaskId?: string): Date {
-        const siblingIds = (this._taskTree.getNode(parentTaskId ?? null)?.directChildren ?? [])
-            .map(c => c.getRecordId());
-        const earliestSiblingStart = this._getEarliestStartDate(siblingIds);
-        if (earliestSiblingStart) {
-            return earliestSiblingStart;
-        }
-
-        if (parentTaskId) {
-            const parentStart = this._parseDate(this._getTaskDate(parentTaskId, 'startDate'));
-            if (parentStart) {
-                return parentStart;
-            }
-        }
-
-        return new Date();
-    }
-
-    /**
-     * Estimates a task duration from existing data, widening the search until a
-     * measurable average is found:
-     * 1. the average of the group's own tasks, otherwise
-     * 2. the average of the parent's sibling level (the grandparent's children), otherwise
-     * 3. the average across every task, otherwise
-     * 4. a single-day default.
-     */
-    private _resolveTaskDuration(parentTaskId?: string): number {
-        const ownAverage = this._getAverageDuration(parentTaskId ?? null);
-        if (ownAverage !== null) {
-            return ownAverage;
-        }
-
-        if (parentTaskId) {
-            const grandParentId = this._getParentId(parentTaskId);
-            const peerAverage = this._getAverageDuration(grandParentId);
-            if (peerAverage !== null) {
-                return peerAverage;
-            }
-        }
-
-        const globalAverage = this._getAverageDuration(null, true);
-        if (globalAverage !== null) {
-            return globalAverage;
-        }
-
-        return MemoryTaskStrategy._DEFAULT_TASK_DURATION_MS;
-    }
-
-    /**
-     * Average duration (ms) of the direct children of `parentId`, or of every task
-     * when `allTasks` is set. Returns `null` when no task has a measurable span.
-     */
-    private _getAverageDuration(parentId: string | null, allTasks = false): number | null {
-        const taskIds = allTasks
-            ? [...this._data.keys()]
-            : (this._taskTree.getNode(parentId ?? null)?.directChildren ?? []).map(c => c.getRecordId());
-
-        let totalDurationMs = 0;
-        let durationCount = 0;
-
-        for (const taskId of taskIds) {
-            const startDate = this._parseDate(this._getTaskDate(taskId, 'startDate'));
-            const endDate = this._parseDate(this._getTaskDate(taskId, 'endDate'));
-            if (!startDate || !endDate || endDate < startDate) {
-                continue;
-            }
-            totalDurationMs += endDate.getTime() - startDate.getTime();
-            durationCount += 1;
-        }
-
-        return durationCount === 0 ? null : totalDurationMs / durationCount;
-    }
-
-    private _getEarliestStartDate(taskIds: string[]): Date | null {
-        let earliest: Date | null = null;
-        for (const taskId of taskIds) {
-            const startDate = this._parseDate(this._getTaskDate(taskId, 'startDate'));
-            if (startDate && (!earliest || startDate < earliest)) {
-                earliest = startDate;
-            }
-        }
-        return earliest;
-    }
-
-    private _getParentId(taskId: string): string | null {
-        return (this._data.get(taskId)?.[PARENT_ID_VALUE_KEY] as string) ?? null;
-    }
-
     private _parseDate(value: string | null): Date | null {
         if (!value) {
             return null;
@@ -440,58 +329,13 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
         return null;
     }
 
-    public async onMoveTask(
-        movingTaskId: string,
-        targetTaskId: string,
-        position: 'above' | 'below' | 'child',
-    ): Promise<IRawRecord[] | null> {
+    public async onMoveTask(parameters: IMoveTaskParameters): Promise<IRawRecord[] | null> {
+        const { movingTaskId, parentId, newPreviousSiblingTaskId, newNextSiblingTaskId } = parameters;
         const moving = this._data.get(movingTaskId);
-        const target = this._data.get(targetTaskId);
-        if (!moving || !target) return null;
+        if (!moving) return null;
 
-        if (position === 'child') {
-            // Prepend as first child of target using the task tree.
-            const children = this._taskTree.getNode(targetTaskId)?.directChildren ?? [];
-            const childRanks = children
-                .map(c => this._data.get(c.getRecordId())?.[STACK_RANK_COL] as string)
-                .filter(Boolean);
-            const minChildRank = childRanks.length === 0 ? null : childRanks.reduce((min, r) =>
-                LexoRank.parse(r).compareTo(LexoRank.parse(min)) < 0 ? r : min);
-            moving[PARENT_ID_VALUE_KEY] = targetTaskId;
-            moving[STACK_RANK_COL] = minChildRank === null ? SEED_RANKS[0] : LexoRank.parse(minChildRank).genPrev().format();
-            this._data.set(movingTaskId, moving);
-            return [moving];
-        }
-
-        // above / below: compute a rank between the target's neighbours using the task tree.
-        const targetParentId = (target[PARENT_ID_VALUE_KEY] as string) ?? null;
-        moving[PARENT_ID_VALUE_KEY] = targetParentId;
-
-        const sortedSiblings = (this._taskTree.getNode(targetParentId)?.directChildren ?? [])
-            .filter(c => c.getRecordId() !== movingTaskId)
-            .map(c => this._data.get(c.getRecordId())!)
-            .filter(Boolean);
-
-        const targetRank = target[STACK_RANK_COL] as string;
-        const targetIdx = sortedSiblings.findIndex(t => t[PRIMARY_ID] === targetTaskId);
-        let newRank: string;
-        if (position === 'above') {
-            const prev = sortedSiblings[targetIdx - 1];
-            if (prev) {
-                newRank = LexoRank.parse(prev[STACK_RANK_COL] as string).between(LexoRank.parse(targetRank)).format();
-            } else {
-                newRank = LexoRank.parse(targetRank).genPrev().format();
-            }
-        } else {
-            const next = sortedSiblings[targetIdx + 1];
-            if (next) {
-                newRank = LexoRank.parse(targetRank).between(LexoRank.parse(next[STACK_RANK_COL] as string)).format();
-            } else {
-                newRank = LexoRank.parse(targetRank).genNext().format();
-            }
-        }
-
-        moving[STACK_RANK_COL] = newRank;
+        moving[PARENT_ID_VALUE_KEY] = parentId ?? null;
+        moving[STACK_RANK_COL] = this._getNewTaskStackRank(parentId, newPreviousSiblingTaskId, newNextSiblingTaskId);
         this._data.set(movingTaskId, moving);
         return [moving];
     }
@@ -522,141 +366,6 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
         this._data.set(id, existing);
 
         return { recordId: id, success: true, fields: updatedFields };
-    }
-
-    /**
-     * Auto-scheduling engine — called after a task's dates change.
-     *
-     * Rules (matching Bryntum Gantt auto-schedule behaviour):
-     *
-     *  1. PARENT MOVE — if the changed task has children and its start date
-     *     shifted, ALL descendants are moved by the same offset (ms delta),
-     *     preserving their relative positions to each other.
-     *
-     *  2. ANCESTOR ROLL-UP — after any date change (on the leaf or after the
-     *     child shift above), every ancestor in the chain is recalculated so
-     *     that its bounds equal min(children.start) → max(children.end).
-     *     This propagates all the way to the root.
-     *
-     *  3. NO CLAMPING — children are never blocked from going before or after
-     *     a parent's current span; the parent simply expands / contracts to fit.
-     *
-     * TODO: finish-to-start dependency propagation (push successors when a
-     *       predecessor's end date moves).
-     *
-     * @returns All IRawRecord objects whose dates were mutated as a side-effect.
-     */
-    private _autoSchedule(changedTaskId: string, previousStart: string | null): IRawRecord[] {
-        const changed: IRawRecord[] = [];
-
-        // ── Rule 1: parent move → shift all descendants by the same delta ────
-        const hasChildren = (this._taskTree.getNode(changedTaskId)?.directChildren ?? []).length > 0;
-        if (previousStart !== null && hasChildren) {
-            const newStart = this._data.get(changedTaskId)?.scheduledstart as string ?? null;
-            const prevDate = this._parseDate(previousStart);
-            const newDate = this._parseDate(newStart);
-            if (prevDate && newDate) {
-                const offsetMs = newDate.getTime() - prevDate.getTime();
-                if (offsetMs !== 0) {
-                    this._shiftDescendants(changedTaskId, offsetMs, changed);
-                }
-            }
-        }
-
-        // ── Rule 2: roll up bounds through every ancestor ─────────────────────
-        let ancestorId = this._getParentId(changedTaskId);
-        while (ancestorId) {
-            const ancestor = this._data.get(ancestorId);
-            if (!ancestor) break;
-
-            const childIds = (this._taskTree.getNode(ancestorId)?.directChildren ?? [])
-                .map(c => c.getRecordId());
-
-            const bounds = this._getChildDateBounds(childIds);
-            if (!bounds) {
-                ancestorId = this._getParentId(ancestorId);
-                continue;
-            }
-
-            const newStart = this._formatDate(bounds.start);
-            const newEnd = this._formatDate(bounds.end);
-            let dirty = false;
-
-            if (ancestor.scheduledstart !== newStart) {
-                ancestor.scheduledstart = newStart;
-                dirty = true;
-            }
-            if (ancestor.scheduledend !== newEnd) {
-                ancestor.scheduledend = newEnd;
-                dirty = true;
-            }
-
-            if (dirty) {
-                this._data.set(ancestorId, ancestor);
-                changed.push(ancestor);
-            }
-
-            ancestorId = this._getParentId(ancestorId);
-        }
-
-        // TODO: Rule 3 — finish-to-start dependency propagation (successors)
-
-        return changed;
-    }
-
-    /**
-     * Recursively shifts every descendant of `parentId` by `offsetMs`,
-     * recording each mutated record in `changed`.
-     */
-    private _shiftDescendants(parentId: string, offsetMs: number, changed: IRawRecord[]): void {
-        const children = this._taskTree.getNode(parentId)?.directChildren ?? [];
-        for (const child of children) {
-            const childId = child.getRecordId();
-            const rec = this._data.get(childId);
-            if (!rec) continue;
-
-            const startDate = this._parseDate(rec.scheduledstart as string ?? null);
-            const endDate = this._parseDate(rec.scheduledend as string ?? null);
-            let dirty = false;
-
-            if (startDate) {
-                rec.scheduledstart = this._formatDate(new Date(startDate.getTime() + offsetMs));
-                dirty = true;
-            }
-            if (endDate) {
-                rec.scheduledend = this._formatDate(new Date(endDate.getTime() + offsetMs));
-                dirty = true;
-            }
-
-            if (dirty) {
-                this._data.set(childId, rec);
-                changed.push(rec);
-            }
-
-            // Recurse into grandchildren
-            this._shiftDescendants(childId, offsetMs, changed);
-        }
-    }
-
-    private _getChildDateBounds(taskIds: string[]): { start: Date; end: Date } | null {
-        let minStart: Date | null = null;
-        let maxEnd: Date | null = null;
-
-        for (const taskId of taskIds) {
-            const rawRecord = this._data.get(taskId);
-            const startDate = this._parseDate(rawRecord?.scheduledstart as string ?? null);
-            const endDate = this._parseDate(rawRecord?.scheduledend as string ?? null);
-
-            if (startDate && (!minStart || startDate < minStart)) {
-                minStart = startDate;
-            }
-            if (endDate && (!maxEnd || endDate > maxEnd)) {
-                maxEnd = endDate;
-            }
-        }
-
-        if (!minStart || !maxEnd) return null;
-        return { start: minStart, end: maxEnd };
     }
 
     public onIsRecordActive(recordId: string): boolean {

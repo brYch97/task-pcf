@@ -33,6 +33,12 @@ export const COLUMNS: IColumn[] = [
         visualSizeFactor: 300,
     },
     {
+        name: STACK_RANK_COL,
+        dataType: 'SingleLine.Text',
+        displayName: 'Stack Rank',
+        visualSizeFactor: 140,
+    },
+    {
         name: 'description',
         dataType: 'Multiple',
         displayName: 'Description',
@@ -141,7 +147,6 @@ export const COLUMNS: IColumn[] = [
     // ── Native (hidden) columns ──────────────────────────────────────────────
     { name: PRIMARY_ID, dataType: 'SingleLine.Text', displayName: 'ID', isHidden: true },
     { name: PARENT_ID_COL, dataType: 'Lookup.Simple', displayName: 'Parent', isHidden: true },
-    { name: STACK_RANK_COL, dataType: 'SingleLine.Text', displayName: 'Stack Rank', isHidden: true },
     { name: STATE_CODE_COL, dataType: 'Whole.None', displayName: 'State', isHidden: true },
 ];
 
@@ -149,7 +154,7 @@ export const COLUMNS: IColumn[] = [
 
 export const DEFAULT_QUERY_COLUMNS: IColumn[] = COLUMNS.filter(c =>
     c.isHidden ||
-    ['subject', 'statuscode', 'priority', 'scheduledend', 'estimatedeffort', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
+    ['subject', 'stackrank', 'statuscode', 'priority', 'scheduledend', 'estimatedeffort', 'percentcomplete', 'assignedto', 'tags'].includes(c.name)
 );
 
 // ─── LexoRank seed values ─────────────────────────────────────────────────────

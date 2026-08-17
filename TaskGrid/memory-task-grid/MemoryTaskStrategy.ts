@@ -75,6 +75,7 @@ export class MemoryTaskStrategy implements ITaskDataProviderStrategy {
     // ── ITaskDataProviderStrategy ────────────────────────────────────────────
 
     public async onInitialize(provider: ITaskDataProvider) {
+        //await new Promise(resolve => setTimeout(resolve, 5000)); // simulate async initialization
         this._provider = provider;
         this._taskTree = provider.getRecordTree();
         return {

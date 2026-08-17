@@ -21,11 +21,8 @@ import { MemoryTaskStrategy } from "./MemoryTaskStrategy";
 import { MemoryGridCustomizerStrategy } from "./MemoryGridCustomizerStrategy";
 import { IExtensions } from "@talxis/base-controls/dist/components/TaskGrid";
 import { ProjectDataProvider } from "@talxis/base-controls/dist/components/TaskGrid/extensions/providers/project";
-import { Gantt } from "@talxis/base-controls/dist/components/TaskGrid/components/gannt";
-import * as React from "react";
-import { IMarkerProps } from "@talxis/base-controls/dist/components/TaskGrid/components/gannt/components/marker";
-import { GanttComponents } from "@talxis/base-controls/dist/components/TaskGrid/components/gannt/components";
 import { ProjectStrategy } from "./ProjectStrategy";
+import { GanttExtension } from "@talxis/base-controls/dist/components/TaskGrid/extensions/gantt";
 
 // ─── User-query data-provider metadata ───────────────────────────────────────
 
@@ -95,6 +92,10 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
         },
     ];
 
+    public async onLoadDependencies() {
+        //await new Promise(resolve => setTimeout(resolve, 5000));
+    }
+
     // ── ITaskGridDescriptor ──────────────────────────────────────────────────
 
     public onGetFieldMapping(): IFieldMapping {
@@ -123,18 +124,8 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
                     });
                 }
             },
-/*             gantt: {
-                onGetGanttComponent: (props) => React.createElement(Gantt, {
-                    ...props,
-                }),
-                onGetCustomMarkers: () => [{
-                    id: 'marker1',
-                    text: 'Custom Marker 1',
-                    color: 'green',
-                    start_date: new Date('2024-06-15'),
-                    end_date: new Date('2024-06-30'),
-                }]
-            } */
+            onGetGanttExtension: () => new GanttExtension()
+            
         }
     }
 
@@ -222,9 +213,9 @@ export class MemoryDescriptor implements ITaskGridDescriptor {
         return provider;
     }
 
-/*     public onGetHeight(): string {
-        return '600px';
-    } */
+    /*     public onGetHeight(): string {
+            return '600px';
+        } */
 
     public onGetGridParameters(): ITaskGridParameters {
         return {

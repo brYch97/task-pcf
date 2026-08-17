@@ -16,16 +16,18 @@ export class TaskGrid implements ComponentFramework.StandardControl<IInputs, IOu
     private _container: HTMLDivElement;
     private _descriptor: ITaskGridDescriptor;
     private _context: ComponentFramework.Context<IInputs, IOutputs>;
+    private _fullHeightClassName: string;
 
     public init(context: ComponentFramework.Context<IInputs, IOutputs>, _notifyOutputChanged: () => void, state: ComponentFramework.Dictionary, container: HTMLDivElement): void {
         initializeIcons();
-        //container.classList.add(mergeStyles({ height: '600px'}));
+        this._fullHeightClassName = mergeStyles({ height: "100%" });
         container.classList.add(mergeStyles({ textAlign: 'left' }));
         this._mockXrmForLocalDevelopment();
         this._container = container;
         this._context = context;
         //@ts-ignore
         this._descriptor = new MemoryDescriptor();
+        this._applyFullHeightToCustomControlParents();
     }
 
     public updateView(context: ComponentFramework.Context<IInputs, IOutputs>): void {
@@ -61,5 +63,20 @@ export class TaskGrid implements ComponentFramework.StandardControl<IInputs, IOu
                 executeFunction: () => { }
             }
         };
+    }
+
+    private _applyFullHeightToCustomControlParents(): void {
+        const customControl = this._container;
+
+        if (!customControl) {
+            return;
+        }
+
+        let currentElement: HTMLElement | null = customControl;
+
+        while (currentElement) {
+            currentElement.classList.add(this._fullHeightClassName);
+            currentElement = currentElement.parentElement;
+        }
     }
 }
